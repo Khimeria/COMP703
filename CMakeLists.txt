@@ -1,25 +1,20 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.16)
 
 # see https://vcpkg.io/en/docs/users/buildsystems/cmake-integration.html#visual-studio if using visual studio
 # On Linux-based distrubtions, use your package manager for dependeices
 
-# VCPKG integration for Windows. See my guide on getting that setup
-if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-      CACHE STRING "")
-endif()
-
-# Use C++ 17
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Option support (faster build times by disabling features)
 option(FAL_TESTS "Should we enable unit test support?" ON)
 option(FAL_DOCS "Should we attempt to build documentation?" ON)
 
 # Project details start here
-project(MyProjectName
+project(M_BossFight
 	VERSION 0.1
-	DESCRIPTION "A brief description of your project here"
+	DESCRIPTION "A multiplayer boss fight game. Begin..."
 	LANGUAGES CXX
 	)
 
@@ -27,25 +22,39 @@ project(MyProjectName
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable( project )
+
+add_executable( project src/main.cpp)
 add_subdirectory( src )
-target_include_directories(project PUBLIC 
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-	$<INSTALL_INTERFACE:include/>
+
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
+
+IF(APPLE)
+	SET(CMAKE_CXX_LINK_FLAGS "-framework OpenGL -framework GLUT")
+ENDIF(APPLE)
+
+set(INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
+set(LIBRARIES ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+
+target_include_directories(
+		project
+		PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+		$<INSTALL_INTERFACE:include/>
+)
+target_include_directories(
+		project
+		PRIVATE
+		/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2
+		/opt/homebrew/Cellar/glew/2.2.0_1/include/GL
+)
+target_link_libraries(
+		project
+		PRIVATE
+		/opt/homebrew/Cellar/sdl2/2.28.5/lib/libSDL2.dylib
+		/opt/homebrew/Cellar/glew/2.2.0_1/lib/libGLEW.dylib
 )
 
-# Testing support
-if (FAL_TESTS)
-	include(CTest)
-	add_subdirectory(tests)
-endif()
 
-# Documentation support
-if (FAL_DOCS)
-	find_package(Doxygen)
-	if (Doxygen_FOUND)
-		add_subdirectory( docs )
-	else()
-		message(STATUS "Doxygen not found, no docs will be built")
-	endif()
-endif()
+

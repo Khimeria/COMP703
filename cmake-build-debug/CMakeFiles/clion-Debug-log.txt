@@ -1,0 +1,32 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703 -B /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-debug
+CMake Warning at tests/CMakeLists.txt:1 (find_package):
+  By not providing "Findbenchmark.cmake" in CMAKE_MODULE_PATH this project
+  has asked CMake to find a package configuration file provided by
+  "benchmark", but CMake did not find one.
+
+  Could not find a package configuration file provided by "benchmark" with
+  any of the following names:
+
+    benchmarkConfig.cmake
+    benchmark-config.cmake
+
+  Add the installation prefix of "benchmark" to CMAKE_PREFIX_PATH or set
+  "benchmark_DIR" to a directory containing one of the above files.  If
+  "benchmark" provides a separate development package or SDK, be sure it has
+  been installed.
+
+
+CMake Warning at tests/CMakeLists.txt:5 (message):
+  Benchmark was not loaded, you will not have unit test support
+
+
+-- Could NOT find GTest (missing: GTEST_LIBRARY GTEST_INCLUDE_DIR GTEST_MAIN_LIBRARY) 
+CMake Warning at tests/CMakeLists.txt:12 (message):
+  GTest was not loaded, you will not have unit test support
+
+
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Doxygen not found, no docs will be built
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-debug
