@@ -15,15 +15,14 @@ option(FAL_DOCS "Should we attempt to build documentation?" ON)
 project(M_BossFight
 	VERSION 0.1
 	DESCRIPTION "A multiplayer boss fight game. Begin..."
-	LANGUAGES CXX
+	LANGUAGES CXX C
 	)
 
 # integration for command-line users
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
-
-add_executable( project src/main.cpp)
+add_executable(project)
 add_subdirectory( src )
 
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
@@ -31,6 +30,7 @@ find_package(GLUT REQUIRED)
 find_package(GLEW REQUIRED)
 
 IF(APPLE)
+	SET(CMAKE_CXX_LINK_FLAGS "-framework OpenGL -framework GLUT")
 	SET(CMAKE_CXX_LINK_FLAGS "-framework OpenGL -framework GLUT")
 ENDIF(APPLE)
 
@@ -49,6 +49,7 @@ target_include_directories(
 		/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2
 		/opt/homebrew/Cellar/glew/2.2.0_1/include/GL
 )
+
 target_link_libraries(
 		project
 		PRIVATE

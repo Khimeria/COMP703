@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL.h>
+//#include <glad/glad.h>
 #include <glew.h>
 
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -58,7 +59,7 @@ void SetupSDL(void)
     SDL_GLContext context = SDL_GL_CreateContext(window);
 
     // Initialize GLEW to setup the OpenGL Function pointers
-    if (GLEW_OK != glewInit())
+    if (false)//GLEW_OK != glewInit())
     {
         std::cout << "Failed to initialize GLEW" << std::endl;
         return exit(EXIT_FAILURE);
