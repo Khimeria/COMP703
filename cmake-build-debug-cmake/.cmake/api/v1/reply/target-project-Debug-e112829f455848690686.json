@@ -34,7 +34,7 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 56,
+				"line" : 57,
 				"parent" : 0
 			},
 			{
@@ -81,6 +81,10 @@
 				},
 				{
 					"backtrace" : 4,
+					"path" : "/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL"
+				},
+				{
+					"backtrace" : 4,
 					"path" : "/opt/homebrew/Cellar/glew/2.2.0_1/include/GL"
 				}
 			],
@@ -118,6 +122,10 @@
 				},
 				{
 					"backtrace" : 4,
+					"path" : "/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL"
+				},
+				{
+					"backtrace" : 4,
 					"path" : "/opt/homebrew/Cellar/glew/2.2.0_1/include/GL"
 				}
 			],
@@ -149,6 +157,11 @@
 			{
 				"backtrace" : 2,
 				"fragment" : "/opt/homebrew/Cellar/glew/2.2.0_1/lib/libGLEW.dylib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/homebrew/Cellar/sdl_image/1.2.12_10/lib/libSDL_image.dylib",
 				"role" : "libraries"
 			}
 		],

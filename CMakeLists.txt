@@ -50,6 +50,7 @@ target_include_directories(
 		project
 		PRIVATE
 		/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2
+		/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL
 		/opt/homebrew/Cellar/glew/2.2.0_1/include/GL
 )
 
@@ -58,6 +59,7 @@ target_link_libraries(
 		PRIVATE
 		/opt/homebrew/Cellar/sdl2/2.28.5/lib/libSDL2.dylib
 		/opt/homebrew/Cellar/glew/2.2.0_1/lib/libGLEW.dylib
+		/opt/homebrew/Cellar/sdl_image/1.2.12_10/lib/libSDL_image.dylib
 )
 
 

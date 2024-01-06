@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SDL.h>
+#include <SDL_image.h>
 #include <glew.h>
+#include <filesystem>
 #include "project/custom_shader.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -8,11 +10,20 @@ const GLint WIDTH = 800, HEIGHT = 600;
 const char *PROGRAM_NAME = "BossFight";
 
 float vertices[] = {
-        // positions         // colors
-        0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-        0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top
+        // positions          // colors           // texture coords
+        0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
 };
+
+float texCoords[] = {
+        0.0f, 0.0f,  // lower-left corner
+        1.0f, 0.0f,  // lower-right corner
+        0.5f, 1.0f   // top-center corner
+};
+
+GLuint* loadTexture(std::string path );
 
 //-----------------------------------
 int main(int argc, char** argv)
@@ -74,11 +85,16 @@ int main(int argc, char** argv)
     CustomShader::Shader ourShader("src/shaders/test.vsh", "src/shaders/test.fsh");
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3* sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    auto texture = loadTexture("textures/container.jpg");
 
     //--- infinite loop with event queue processing
     SDL_Event event;
@@ -105,8 +121,11 @@ int main(int argc, char** argv)
         float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
         ourShader.setFloat("ourColor", greenValue);
 
+
+        //glBindTexture(GL_TEXTURE_2D, *texture);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         SDL_GL_SwapWindow(window);
     } // -- infinite loop
@@ -116,4 +135,41 @@ int main(int argc, char** argv)
     SDL_Quit();
 
     return EXIT_SUCCESS;
+}
+
+GLuint* loadTexture(std::string path )
+{
+    //Load image at specified path
+    std::filesystem::path cwd = std::filesystem::current_path().parent_path();
+    SDL_Surface* loadedSurface = IMG_Load( (cwd/path).c_str() );
+    if( loadedSurface == NULL )
+    {
+        printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+        return nullptr;
+    }
+    else
+    {
+        GLuint TextureID = 0;
+
+        glGenTextures(1, &TextureID);
+        glBindTexture(GL_TEXTURE_2D, TextureID);
+
+        int Mode = GL_RGB;
+        if(loadedSurface->format->BytesPerPixel == 4) {
+            Mode = GL_RGBA;
+        }
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, Mode, loadedSurface->w, loadedSurface->h, 0, Mode, GL_UNSIGNED_BYTE, loadedSurface->pixels);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        //Get rid of old loaded surface
+        //SDL_FreeSurface( loadedSurface );
+        return &TextureID;
+    }
+
 }
