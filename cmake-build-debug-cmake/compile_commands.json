@@ -1,6 +1,12 @@
 [
 {
   "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-debug-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/custom_shader.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/custom_shader.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/custom_shader.cpp",
+  "output": "CMakeFiles/project.dir/src/custom_shader.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-debug-cmake",
   "command": "/Library/Developer/CommandLineTools/usr/bin/cc -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/glad.c.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/glad.c",
   "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/glad.c",
   "output": "CMakeFiles/project.dir/src/glad.c.o"

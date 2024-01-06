@@ -22,7 +22,10 @@ project(M_BossFight
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(project)
+add_executable(project
+		include/project/custom_shader.h
+		src/custom_shader.cpp
+)
 add_subdirectory( src )
 
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
