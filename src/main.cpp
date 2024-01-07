@@ -23,7 +23,8 @@ float texCoords[] = {
         0.5f, 1.0f   // top-center corner
 };
 
-GLuint* loadTexture(std::string path );
+void loadTexture(GLuint *textureID, std::string path);
+void flip_surface(SDL_Surface* surface);
 
 //-----------------------------------
 int main(int argc, char** argv)
@@ -32,6 +33,14 @@ int main(int argc, char** argv)
     if( SDL_Init(SDL_INIT_VIDEO) < 0 )
     {
         fprintf(stderr,"Failed to initialize SDL Video!\n");
+        SDL_Quit();
+        exit(EXIT_FAILURE);
+    }
+
+    int flags = IMG_INIT_JPG | IMG_INIT_PNG;
+    if (( IMG_Init(flags) & flags) != flags) {
+        std::cout << "IMG_Init: Failed to init required jpg and png support: Error-> " << IMG_GetError() << "\n";
+        SDL_Quit();
         exit(EXIT_FAILURE);
     }
 
@@ -76,9 +85,9 @@ int main(int argc, char** argv)
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
     GLuint indices[] = {0, 1, 2, 3,0,2};
-    GLuint elementBuffer;
-    glGenBuffers(1, &elementBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+    GLuint EBO;
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     GLuint VBO;
     glGenBuffers(1, &VBO);
@@ -97,7 +106,13 @@ int main(int argc, char** argv)
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    auto texture = loadTexture("textures/container.jpg");
+    unsigned int texture1, texture2;
+    loadTexture(&texture1, "textures/container.jpg");
+    loadTexture(&texture2, "textures/awesomeface.png");
+
+    ourShader.use();
+    ourShader.setInt("texture1", 0);
+    ourShader.setInt( "texture2", 1);
 
     //--- infinite loop with event queue processing
     SDL_Event event;
@@ -118,16 +133,14 @@ int main(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw OpenGL
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
+
         ourShader.use();
-
-        auto timeValue = float (SDL_GetTicks()/ 1000.0);
-        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-        ourShader.setFloat("ourColor", greenValue);
-
-
-        glBindTexture(GL_TEXTURE_2D, *texture);
         glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         SDL_GL_SwapWindow(window);
@@ -140,7 +153,7 @@ int main(int argc, char** argv)
     return EXIT_SUCCESS;
 }
 
-GLuint* loadTexture(std::string path )
+void loadTexture(GLuint *textureID, std::string path)
 {
     //Load image at specified path
     std::filesystem::path cwd = std::filesystem::current_path().parent_path();
@@ -148,18 +161,28 @@ GLuint* loadTexture(std::string path )
     if( loadedSurface == NULL )
     {
         printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
-        return nullptr;
+        return;
     }
     else
     {
-        GLuint TextureID = 0;
-
-        glGenTextures(1, &TextureID);
-        glBindTexture(GL_TEXTURE_2D, TextureID);
+        flip_surface(loadedSurface);
+        glGenTextures(1, textureID);
+        glBindTexture(GL_TEXTURE_2D, *textureID);
 
         int Mode = GL_RGB;
-        if(loadedSurface->format->BytesPerPixel == 4) {
-            Mode = GL_RGBA;
+        switch (loadedSurface->format->BytesPerPixel)
+        {
+            case 4:
+            case 24:
+                if (loadedSurface->format->Rmask == 0x000000ff)
+                    Mode = GL_RGBA;
+                else      Mode = GL_BGRA;
+                break;
+            case 3:
+                if (loadedSurface->format->Rmask == 0x000000ff)
+                    Mode = GL_RGB;
+                else   Mode = GL_BGR;
+                break;
         }
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -171,8 +194,31 @@ GLuint* loadTexture(std::string path )
         glGenerateMipmap(GL_TEXTURE_2D);
 
         //Get rid of old loaded surface
-        //SDL_FreeSurface( loadedSurface );
-        return &TextureID;
+        //SDL_FreeSurface( loadedSurface ); crush
     }
 
+}
+
+void flip_surface(SDL_Surface* surface)
+{
+    SDL_LockSurface(surface);
+
+    int pitch = surface->pitch; // row size
+    char* temp = new char[pitch]; // intermediate buffer
+    char* pixels = (char*) surface->pixels;
+
+    for(int i = 0; i < surface->h / 2; ++i) {
+        // get pointers to the two rows to swap
+        char* row1 = pixels + i * pitch;
+        char* row2 = pixels + (surface->h - i - 1) * pitch;
+
+        // swap rows
+        memcpy(temp, row1, pitch);
+        memcpy(row1, row2, pitch);
+        memcpy(row2, temp, pitch);
+    }
+
+    delete[] temp;
+
+    SDL_UnlockSurface(surface);
 }

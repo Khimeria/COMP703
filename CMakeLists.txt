@@ -31,6 +31,7 @@ add_subdirectory( src )
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(GLUT REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(PNG REQUIRED)
 
 IF(APPLE)
 	SET(CMAKE_CXX_LINK_FLAGS "-framework OpenGL -framework GLUT")
