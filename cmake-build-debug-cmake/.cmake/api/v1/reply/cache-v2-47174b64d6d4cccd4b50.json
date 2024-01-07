@@ -1588,6 +1588,22 @@
 			],
 			"type" : "PATH",
 			"value" : "/opt/homebrew/lib/cmake/glfw3"
+		},
+		{
+			"name" : "glm_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for glm."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/glm"
 		}
 	],
 	"kind" : "cache",

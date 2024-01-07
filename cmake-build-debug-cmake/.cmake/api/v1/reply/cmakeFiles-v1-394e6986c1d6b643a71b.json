@@ -273,6 +273,14 @@
 			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/FindPackageMessage.cmake"
 		},
 		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/glm/glmConfig-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/glm/glmConfig.cmake"
+		},
+		{
 			"path" : "src/CMakeLists.txt"
 		}
 	],

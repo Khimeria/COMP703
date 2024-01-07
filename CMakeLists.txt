@@ -32,10 +32,12 @@ find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(GLUT REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(PNG REQUIRED)
+find_package(glm REQUIRED)
 
 IF(APPLE)
 	SET(CMAKE_CXX_LINK_FLAGS "-framework OpenGL -framework GLUT")
 	SET(CMAKE_CXX_LINK_FLAGS "-framework OpenGL -framework GLUT")
+	set(glm_DIR /opt/homebrew/Cellar/glm/0.9.9.8/lib/cmake/glm)
 ENDIF(APPLE)
 
 set(INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
@@ -53,6 +55,7 @@ target_include_directories(
 		/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2
 		/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL
 		/opt/homebrew/Cellar/glew/2.2.0_1/include/GL
+		/opt/homebrew/Cellar/glm/0.9.9.8/include/glm
 )
 
 target_link_libraries(

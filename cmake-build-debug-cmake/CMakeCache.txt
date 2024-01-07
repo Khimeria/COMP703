@@ -300,6 +300,9 @@ glad_DIR:PATH=glad_DIR-NOTFOUND
 //The directory containing a CMake configuration file for glfw3.
 glfw3_DIR:PATH=/opt/homebrew/lib/cmake/glfw3
 
+//The directory containing a CMake configuration file for glm.
+glm_DIR:PATH=/opt/homebrew/lib/cmake/glm
+
 
 ########################
 # INTERNAL cache entries
@@ -480,4 +483,6 @@ ZLIB_INCLUDE_DIR-ADVANCED:INTERNAL=1
 ZLIB_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ZLIB_LIBRARY_RELEASE
 ZLIB_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: glm_DIR
+glm_DIR-ADVANCED:INTERNAL=1
 
