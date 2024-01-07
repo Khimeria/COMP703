@@ -75,12 +75,15 @@ int main(int argc, char** argv)
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-
-    unsigned int VBO;
+    GLuint indices[] = {0, 1, 2, 3,0,2};
+    GLuint elementBuffer;
+    glGenBuffers(1, &elementBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    GLuint VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
 
     CustomShader::Shader ourShader("src/shaders/test.vsh", "src/shaders/test.fsh");
 
@@ -122,10 +125,10 @@ int main(int argc, char** argv)
         ourShader.setFloat("ourColor", greenValue);
 
 
-        //glBindTexture(GL_TEXTURE_2D, *texture);
+        glBindTexture(GL_TEXTURE_2D, *texture);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         SDL_GL_SwapWindow(window);
     } // -- infinite loop
