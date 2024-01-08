@@ -1,11 +1,11 @@
 //
 // Created by Marharyta Haichuk on 06/01/2024.
 //
-#include "project/custom_shader.h"
+#include "project/shader.h"
 #include <glew.h>
 #include <gtc/type_ptr.hpp>
 
-namespace CustomShader
+namespace KhEngine
 {
     Shader::Shader(const char* vertexPath, const char* fragmentPath)
     {

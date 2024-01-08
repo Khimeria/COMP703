@@ -23,8 +23,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PROJECT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(project
-		include/project/custom_shader.h
-		src/custom_shader.cpp
+		include/project/shader.h
+		src/shader.cpp
+		include/project/camera.h
+		src/camera.cpp
 )
 add_subdirectory( src )
 
