@@ -3,6 +3,9 @@
 //
 #include "project/camera.h"
 #include <iostream>
+#include <SDL.h>
+#include <SDL_keyboard.h>
+#include <SDL_mouse.h>
 
 namespace KhEngine
 {
@@ -13,21 +16,32 @@ namespace KhEngine
         Camera::direction = glm::normalize(position - target);
 
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 cameraRight = glm::normalize(glm::cross(up, direction));
-        glm::vec3 cameraUp = glm::cross(direction, cameraRight);
+        cameraRight = glm::normalize(glm::cross(up, direction));
+        cameraUp = glm::cross(direction, cameraRight);
+    }
 
-        glm::mat4 view1 = glm::mat4(1);
-        view1 = glm::translate(view1, glm::vec3(position.x,position.y,-position.z));
-        glm::mat4 matr = glm::mat4(glm::vec4(cameraRight,0),
-                                   glm::vec4(cameraUp,0),
-                                   glm::vec4(direction,0),
-                                   glm::vec4(0,0,0,1));
-        view1 = view1*matr;
+    glm::mat4 Camera::getViewMat4()
+    {
+        return glm::lookAt(position, position+cameraForward, cameraUp);
+    }
 
-        glm::mat4 view2 = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-                           glm::vec3(0.0f, 0.0f, 0.0f),
-                           glm::vec3(0.0f, 1.0f, 0.0f));
-        if(view1 == view2)
-            std::cout << "equals" << std::endl;
+    void Camera::setSpeed(float speed){
+        cameraSpeed = speed;
+    }
+
+    void Camera::tick(float deltaTime)
+    {
+        auto movementSpeed = cameraSpeed * deltaTime;
+
+        const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
+        if (keyboardState[SDL_SCANCODE_W])
+            position += cameraForward * movementSpeed;
+        if (keyboardState[SDL_SCANCODE_S])
+           position -= cameraForward * movementSpeed;
+        if (keyboardState[SDL_SCANCODE_A])
+            position += cameraRight * movementSpeed;
+        if (keyboardState[SDL_SCANCODE_D])
+            position -= cameraRight * movementSpeed;
+
     }
 }

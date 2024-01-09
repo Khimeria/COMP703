@@ -7,16 +7,24 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include <SDL_events.h>
 
 namespace KhEngine
 {
     class Camera
     {
     public:
-        Camera(glm::vec3 position, glm::vec3 direction);
+        Camera(glm::vec3 position, glm::vec3 target);
+        glm::mat4 getViewMat4();
+        void tick(float deltaTime);
+        void setSpeed(float speed);
     private:
         glm::vec3 position;
         glm::vec3 direction;
+        glm::vec3 cameraForward = glm::vec3(0.0f, 0.0f, -1.0f);
+        glm::vec3 cameraUp;
+        glm::vec3 cameraRight;
+        float cameraSpeed = 0.5f;
     };
 }
 #endif //M_BOSSFIGHT_CAMERA_H

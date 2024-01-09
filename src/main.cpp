@@ -171,6 +171,8 @@ int main(int argc, char** argv)
 
     //--- infinite loop with event queue processing
     SDL_Event event;
+    float deltaTime = 0.0f;
+    float lastFrame = (float)SDL_GetTicks()/1000;
     while(EXIT_FAILURE)
     {
         while( SDL_PollEvent( &event ))
@@ -184,10 +186,16 @@ int main(int argc, char** argv)
 
         } // -- while event in queue
         // Clear the colorbuffer
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw OpenGL
+        float currentFrame = (float)SDL_GetTicks()/1000;
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        camera.tick(deltaTime);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
@@ -205,16 +213,16 @@ int main(int argc, char** argv)
         //model = glm::rotate(model, ((float)SDL_GetTicks()/360000000 )* glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 
 
-        const float radius = 10.0f;
-        float camX = sin((float)SDL_GetTicks()/1000) * radius;
-        float camZ = cos((float)SDL_GetTicks()/1000) * radius;
-        glm::mat4 view;
-        view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+        //const float radius = 10.0f;
+        //float camX = sin((float)SDL_GetTicks()/1000) * radius;
+        //float camZ = cos((float)SDL_GetTicks()/1000) * radius;
+        //glm::mat4 view;
+        //view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 
 
         // get matrix's uniform location and set matrix
         ourShader.use();
-        ourShader.setMat4("view", view);
+        ourShader.setMat4("view", camera.getViewMat4());
         ourShader.setMat4("projection", projection);
 
         glBindVertexArray(VAO);
