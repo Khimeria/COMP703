@@ -1566,6 +1566,30 @@
 			"value" : "/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/lib/libz.tbd"
 		},
 		{
+			"name" : "assim_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for assim."
+				}
+			],
+			"type" : "PATH",
+			"value" : "assim_DIR-NOTFOUND"
+		},
+		{
+			"name" : "assimp_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for assimp."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/homebrew/lib/cmake/assimp-5.3"
+		},
+		{
 			"name" : "glad_DIR",
 			"properties" : 
 			[

@@ -12,8 +12,8 @@ namespace KhEngine
 
     Camera::Camera(glm::vec3 position, glm::vec3 target)
     {
-        Camera::position = position;
-        Camera::direction = glm::normalize(position - target);
+        this->position = position;
+        this->direction = glm::normalize(position - target);
 
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         cameraRight = glm::normalize(glm::cross(up, direction));
@@ -26,7 +26,7 @@ namespace KhEngine
     }
 
     void Camera::setSpeed(float speed){
-        cameraSpeed = speed;
+        this->cameraSpeed = speed;
     }
 
     void Camera::tick(float deltaTime)

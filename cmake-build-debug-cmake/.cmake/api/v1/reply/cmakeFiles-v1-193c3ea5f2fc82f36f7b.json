@@ -281,6 +281,22 @@
 			"path" : "/opt/homebrew/lib/cmake/glm/glmConfig.cmake"
 		},
 		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/assimp-5.3/assimpConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/assimp-5.3/assimpConfig.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/assimp-5.3/assimpTargets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/assimp-5.3/assimpTargets-release.cmake"
+		},
+		{
 			"path" : "src/CMakeLists.txt"
 		}
 	],

@@ -9,5 +9,26 @@
 #define PROJECT_MAIN_HPP
 
 // declorations, includes, etc... go here
+#include <iostream>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <glew.h>
+#include <filesystem>
+#include "project/shader.h"
+#include "project/camera.h"
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
+namespace KhEngine
+{
+    void loadTexture(GLuint *textureID, std::string path, std::string);
+    void flip_surface(SDL_Surface* surface);
+
+    void setCursorMode(SDL_Window* window, int state);
+
+    glm::mat4 getProjection(float fov);
+}
+
 
 #endif // PROJECT_MAIN_HPP

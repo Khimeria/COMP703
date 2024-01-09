@@ -294,6 +294,12 @@ ZLIB_LIBRARY_DEBUG:FILEPATH=ZLIB_LIBRARY_DEBUG-NOTFOUND
 //Path to a library.
 ZLIB_LIBRARY_RELEASE:FILEPATH=/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/lib/libz.tbd
 
+//The directory containing a CMake configuration file for assim.
+assim_DIR:PATH=assim_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for assimp.
+assimp_DIR:PATH=/opt/homebrew/lib/cmake/assimp-5.3
+
 //The directory containing a CMake configuration file for glad.
 glad_DIR:PATH=glad_DIR-NOTFOUND
 

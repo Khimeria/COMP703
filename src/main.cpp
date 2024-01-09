@@ -1,14 +1,6 @@
-#include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
-#include <glew.h>
-#include <filesystem>
-#include "project/shader.h"
-#include "project/camera.h"
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
+#include <project/main.hpp>
 
+//-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
 
 const char *PROGRAM_NAME = "BossFight";
@@ -59,14 +51,6 @@ float vertices[] = {
 
 GLuint indices[] = {0, 1, 3, 1,2,3};
 
-void loadTexture(GLuint *textureID, std::string path);
-void flip_surface(SDL_Surface* surface);
-
-void setCursorMode(SDL_Window* window, int state);
-
-glm::mat4 getProjection(float fov);
-
-//-----------------------------------
 int main(int argc, char** argv)
 {
     // init video system
@@ -121,14 +105,14 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, WIDTH, HEIGHT);
 
-    unsigned int VAO;
+    GLuint VAO, EBO, VBO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-    GLuint EBO;
+
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    GLuint VBO;
+
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -143,8 +127,9 @@ int main(int argc, char** argv)
     glEnableVertexAttribArray(1);
 
     unsigned int texture1, texture2;
-    loadTexture(&texture1, "textures/container.jpg");
-    loadTexture(&texture2, "textures/awesomeface.png");
+    std::string cwd = std::filesystem::current_path().parent_path().c_str();
+    KhEngine::loadTexture(&texture1, cwd, "textures/container.jpg");
+    KhEngine::loadTexture(&texture2, cwd, "textures/awesomeface.png");
 
     ourShader.use();
     ourShader.setInt("texture1", 0);
@@ -152,7 +137,7 @@ int main(int argc, char** argv)
 
     glm::mat4 projection;
     float fov = 45.0f;
-    projection = getProjection(fov);
+    projection = KhEngine::getProjection(fov);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -180,8 +165,9 @@ int main(int argc, char** argv)
     float lastFrame = (float)SDL_GetTicks()/1000;
 
     int cursorState = 0;
-    setCursorMode(window, cursorState);
+    KhEngine::setCursorMode(window, cursorState);
 
+    //game loop
     while(EXIT_FAILURE)
     {
         while( SDL_PollEvent( &event ))
@@ -195,20 +181,20 @@ int main(int argc, char** argv)
                     {
                         case SDLK_ESCAPE:
                             cursorState = 1-cursorState;
-                            setCursorMode(window, cursorState);
+                            KhEngine::setCursorMode(window, cursorState);
                             break;
                     }
                     break;
                 case SDL_MOUSEWHEEL:
-                    {
-                        fov -= (float)event.wheel.y;
-                        if (fov < 1.0f)
-                            fov = 1.0f;
-                        if (fov > 45.0f)
-                            fov = 45.0f;
+                {
+                    fov -= (float)event.wheel.y;
+                    if (fov < 1.0f)
+                        fov = 1.0f;
+                    if (fov > 45.0f)
+                        fov = 45.0f;
 
-                        projection = getProjection(fov);
-                    }
+                    projection = KhEngine::getProjection(fov);
+                }
                     break;
 
             }
@@ -252,7 +238,11 @@ int main(int argc, char** argv)
         }
 
         SDL_GL_SwapWindow(window);
-    } // -- infinite loop
+    }
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
@@ -261,21 +251,21 @@ int main(int argc, char** argv)
     return EXIT_SUCCESS;
 }
 
-glm::mat4 getProjection(float fov) {
+glm::mat4 KhEngine::getProjection(float fov) {
     return glm::perspective(glm::radians(fov), 1.0f * WIDTH / HEIGHT, 0.1f, 100.0f);
 }
 
-void setCursorMode(SDL_Window* window, int state) {
+void KhEngine::setCursorMode(SDL_Window* window, int state) {
     SDL_ShowCursor(state);
     SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
     SDL_SetRelativeMouseMode((SDL_bool)(1-state));
 }
 
-void loadTexture(GLuint *textureID, std::string path)
+void KhEngine::loadTexture(GLuint *textureID, std::string directory, std::string path)
 {
     //Load image at specified path
-    std::filesystem::path cwd = std::filesystem::current_path().parent_path();
-    SDL_Surface* loadedSurface = IMG_Load( (cwd/path).c_str() );
+
+    SDL_Surface* loadedSurface = IMG_Load((directory + "/" + path).c_str());
     if( loadedSurface == NULL )
     {
         printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
@@ -283,7 +273,7 @@ void loadTexture(GLuint *textureID, std::string path)
     }
     else
     {
-        flip_surface(loadedSurface);
+        KhEngine::flip_surface(loadedSurface);
         glGenTextures(1, textureID);
         glBindTexture(GL_TEXTURE_2D, *textureID);
 
@@ -317,7 +307,7 @@ void loadTexture(GLuint *textureID, std::string path)
 
 }
 
-void flip_surface(SDL_Surface* surface)
+void KhEngine::flip_surface(SDL_Surface* surface)
 {
     SDL_LockSurface(surface);
 
@@ -340,3 +330,4 @@ void flip_surface(SDL_Surface* surface)
 
     SDL_UnlockSurface(surface);
 }
+
