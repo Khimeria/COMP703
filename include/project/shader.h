@@ -9,7 +9,7 @@
 #include <iostream>
 #include <glm.hpp>
 
-namespace CustomShader{
+namespace KhEngine{
     class Shader
     {
         public:
