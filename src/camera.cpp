@@ -33,6 +33,24 @@ namespace KhEngine
     {
         auto movementSpeed = cameraSpeed * deltaTime;
 
+        SDL_GetRelativeMouseState(&mouseX, &mouseY);
+        cameraYaw += mouseX * glm::radians(mouseSensitivity);
+        cameraPitch -= mouseY * glm::radians(mouseSensitivity);
+        // lock pitch to certain range
+        if (cameraPitch > 89.0f)
+            cameraPitch = 89.0f;
+        if (cameraPitch < -89.0f)
+            cameraPitch = -89.0f;
+
+        // calculate camera rotation
+        direction.x = cos(cameraYaw) * cos(cameraPitch);
+        direction.y = sin(cameraPitch);
+        direction.z = sin(cameraYaw) * cos(cameraPitch);
+        cameraForward = glm::normalize(direction);
+        // get camera right
+        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraForward));
+
         const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
         if (keyboardState[SDL_SCANCODE_W])
             position += cameraForward * movementSpeed;
