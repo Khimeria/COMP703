@@ -62,6 +62,10 @@ GLuint indices[] = {0, 1, 3, 1,2,3};
 void loadTexture(GLuint *textureID, std::string path);
 void flip_surface(SDL_Surface* surface);
 
+void setCursorMode(SDL_Window* window, int state);
+
+glm::mat4 getProjection(float fov);
+
 //-----------------------------------
 int main(int argc, char** argv)
 {
@@ -147,7 +151,8 @@ int main(int argc, char** argv)
     ourShader.setInt( "texture2", 1);
 
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 1.0f * WIDTH / HEIGHT, 0.1f, 100.0f);
+    float fov = 45.0f;
+    projection = getProjection(fov);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -173,6 +178,10 @@ int main(int argc, char** argv)
     SDL_Event event;
     float deltaTime = 0.0f;
     float lastFrame = (float)SDL_GetTicks()/1000;
+
+    int cursorState = 0;
+    setCursorMode(window, cursorState);
+
     while(EXIT_FAILURE)
     {
         while( SDL_PollEvent( &event ))
@@ -181,7 +190,27 @@ int main(int argc, char** argv)
             {
                 case SDL_QUIT:
                     exit(EXIT_SUCCESS);
+                case SDL_KEYDOWN:
+                    switch (event.key.keysym.sym)
+                    {
+                        case SDLK_ESCAPE:
+                            cursorState = 1-cursorState;
+                            setCursorMode(window, cursorState);
+                            break;
+                    }
                     break;
+                case SDL_MOUSEWHEEL:
+                    {
+                        fov -= (float)event.wheel.y;
+                        if (fov < 1.0f)
+                            fov = 1.0f;
+                        if (fov > 45.0f)
+                            fov = 45.0f;
+
+                        projection = getProjection(fov);
+                    }
+                    break;
+
             }
 
         } // -- while event in queue
@@ -201,24 +230,6 @@ int main(int argc, char** argv)
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
-
-        // create transformations
-        //glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        //transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        //transform = glm::rotate(transform, (float)SDL_GetTicks()/1000, glm::vec3(0.0f, 0.0f, 1.0f));
-
-        //unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-        //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-
-        //model = glm::rotate(model, ((float)SDL_GetTicks()/360000000 )* glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-
-
-        //const float radius = 10.0f;
-        //float camX = sin((float)SDL_GetTicks()/1000) * radius;
-        //float camZ = cos((float)SDL_GetTicks()/1000) * radius;
-        //glm::mat4 view;
-        //view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-
 
         // get matrix's uniform location and set matrix
         ourShader.use();
@@ -248,6 +259,16 @@ int main(int argc, char** argv)
     SDL_Quit();
 
     return EXIT_SUCCESS;
+}
+
+glm::mat4 getProjection(float fov) {
+    return glm::perspective(glm::radians(fov), 1.0f * WIDTH / HEIGHT, 0.1f, 100.0f);
+}
+
+void setCursorMode(SDL_Window* window, int state) {
+    SDL_ShowCursor(state);
+    SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+    SDL_SetRelativeMouseMode((SDL_bool)(1-state));
 }
 
 void loadTexture(GLuint *textureID, std::string path)
