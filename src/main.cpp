@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, WIDTH, HEIGHT);
 
-    KhEngine::Shader ourShader("src/shaders/test.vsh", "src/shaders/test.fsh");
+    KhEngine::Shader ourShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
     KhEngine::Model ourModel("models/backpack/backpack.obj");
 
     glm::mat4 projection;
