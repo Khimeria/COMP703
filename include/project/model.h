@@ -18,13 +18,16 @@ namespace KhEngine
     public:
         Model(char *path);
         void Draw(Shader &shader);
+
+        void Destroy();
+
     private:
         // model data
         std::vector<Texture> textures_loaded;
         std::vector<Mesh> meshes;
         std::string directory;
 
-        void loadModel(std::string path);
+        void loadModel(std::string relativePath);
         void processNode(aiNode *node, const aiScene *scene);
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,

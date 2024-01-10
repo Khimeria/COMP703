@@ -22,16 +22,17 @@ namespace KhEngine
             mesh.Draw(shader);
     }
 
-    void Model::loadModel(std::string path) {
+    void Model::loadModel(std::string relativePath) {
         Assimp::Importer import;
-        const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+        auto cdw = std::filesystem::current_path().parent_path();
+        const aiScene *scene = import.ReadFile(cdw/relativePath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
             return;
         }
-        directory = path.substr(0, path.find_last_of('/'));
+        directory = relativePath.substr(0, relativePath.find_last_of('/'));
 
         processNode(scene->mRootNode, scene);
     }
@@ -108,7 +109,8 @@ namespace KhEngine
     std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
     {
         std::vector<Texture> textures;
-        for(GLuint i = 0; i < mat->GetTextureCount(type); i++)
+        auto num = mat->GetTextureCount(type);
+        for(GLuint i = 0; i < num; i++)
         {
             aiString str;
             mat->GetTexture(type, i, &str);
@@ -133,6 +135,12 @@ namespace KhEngine
             }
         }
         return textures;
+    }
+
+    void Model::Destroy() {
+        for (auto &mesh: meshes) {
+            mesh.Destroy();
+        }
     }
 
 }

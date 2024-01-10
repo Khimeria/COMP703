@@ -31,6 +31,7 @@ namespace KhEngine
 
         Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Texture>& textures);
         void Draw(Shader &shader);
+        void Destroy();
     private:
         //  render data
         GLuint VAO, VBO, EBO;

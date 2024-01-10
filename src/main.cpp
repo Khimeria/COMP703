@@ -1,4 +1,5 @@
 #include <project/main.hpp>
+#include "project/model.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -105,35 +106,8 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, WIDTH, HEIGHT);
 
-    GLuint VAO, EBO, VBO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     KhEngine::Shader ourShader("src/shaders/test.vsh", "src/shaders/test.fsh");
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    unsigned int texture1, texture2;
-    std::string cwd = std::filesystem::current_path().parent_path().c_str();
-    KhEngine::loadTexture(&texture1, cwd, "textures/container.jpg");
-    KhEngine::loadTexture(&texture2, cwd, "textures/awesomeface.png");
-
-    ourShader.use();
-    ourShader.setInt("texture1", 0);
-    ourShader.setInt( "texture2", 1);
+    KhEngine::Model ourModel("models/backpack/backpack.obj");
 
     glm::mat4 projection;
     float fov = 45.0f;
@@ -170,6 +144,8 @@ int main(int argc, char** argv)
     //game loop
     while(EXIT_FAILURE)
     {
+
+        //input loop
         while( SDL_PollEvent( &event ))
         {
             switch( event.type )
@@ -200,8 +176,8 @@ int main(int argc, char** argv)
             }
 
         } // -- while event in queue
-        // Clear the colorbuffer
 
+        // Clear the colorbuffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -212,37 +188,21 @@ int main(int argc, char** argv)
 
         camera.tick(deltaTime);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-
         // get matrix's uniform location and set matrix
         ourShader.use();
         ourShader.setMat4("view", camera.getViewMat4());
         ourShader.setMat4("projection", projection);
 
-        glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        for(unsigned int i = 0; i < 10; i++)
-        {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            ourShader.setMat4("model", model);
-
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model);
+        ourModel.Draw(ourShader);
 
         SDL_GL_SwapWindow(window);
     }
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    ourModel.Destroy();
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
@@ -263,9 +223,10 @@ void KhEngine::setCursorMode(SDL_Window* window, int state) {
 
 void KhEngine::loadTexture(GLuint *textureID, std::string directory, std::string path)
 {
-    //Load image at specified path
+    //Load image at speci1fied path
 
-    SDL_Surface* loadedSurface = IMG_Load((directory + "/" + path).c_str());
+    auto cdw = std::filesystem::current_path().parent_path();
+    SDL_Surface* loadedSurface = IMG_Load((cdw/directory/path).c_str());
     if( loadedSurface == NULL )
     {
         printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
