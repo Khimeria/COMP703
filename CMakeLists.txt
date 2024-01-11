@@ -32,6 +32,8 @@ add_executable(project
 		include/project/mesh.h
 		include/project/model.h
 		include/project/main.hpp
+		include/project/light.h
+		src/light.cpp
 )
 add_subdirectory( src )
 
