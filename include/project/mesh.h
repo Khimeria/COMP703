@@ -27,6 +27,8 @@ namespace KhEngine
         int m_BoneIDs[MAX_BONE_INFLUENCE];
         //weights from each bone
         float m_Weights[MAX_BONE_INFLUENCE];
+        glm::vec4 Color;
+        float useDiffuseTexture;
     };
 
     struct Texture {

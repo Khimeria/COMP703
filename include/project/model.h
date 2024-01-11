@@ -13,6 +13,13 @@
 
 namespace KhEngine
 {
+    struct Material {
+        glm::vec3 Diffuse;
+        glm::vec3 Specular;
+        glm::vec3 Ambient;
+        float Shininess;
+    };
+
     class Model
     {
     public:
@@ -30,8 +37,8 @@ namespace KhEngine
         void loadModel(std::string relativePath);
         void processNode(aiNode *node, const aiScene *scene);
         Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-        std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
-                                             std::string typeName);
+        std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+        Material loadMaterial(aiMaterial* mat);
     };
 }
 
