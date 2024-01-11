@@ -1,6 +1,9 @@
 target_sources( project
 	PRIVATE
 		# put your cpp files here
-		glad.c
+		camera.cpp
+		model.cpp
+		mesh.cpp
+		shader.cpp
 		main.cpp
 )
