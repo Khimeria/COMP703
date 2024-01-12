@@ -1,5 +1,6 @@
 #include <project/main.hpp>
 #include "project/model.h"
+#include "project/light.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -108,25 +109,13 @@ int main(int argc, char** argv)
 
     KhEngine::Shader ourShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
     KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
+    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(1.0f));
 
     glm::mat4 projection;
     float fov = 45.0f;
     projection = KhEngine::getProjection(fov);
 
     glEnable(GL_DEPTH_TEST);
-
-    glm::vec3 cubePositions[] = {
-            glm::vec3( 0.0f,  0.0f,  0.0f),
-            glm::vec3( 2.0f,  5.0f, -15.0f),
-            glm::vec3(-1.5f, -2.2f, -2.5f),
-            glm::vec3(-3.8f, -2.0f, -12.3f),
-            glm::vec3( 2.4f, -0.4f, -3.5f),
-            glm::vec3(-1.7f,  3.0f, -7.5f),
-            glm::vec3( 1.3f, -2.0f, -2.5f),
-            glm::vec3( 1.5f,  2.0f, -2.5f),
-            glm::vec3( 1.5f,  0.2f, -1.5f),
-            glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
 
     //camera creation
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -189,15 +178,20 @@ int main(int argc, char** argv)
         camera.tick(deltaTime);
 
         // get matrix's uniform location and set matrix
+        auto view = camera.getViewMat4();
         ourShader.use();
-        ourShader.setMat4("view", camera.getViewMat4());
+        ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
+
+        ourLightSource.setView(view);
+        ourLightSource.setProjection(projection);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
+        ourLightSource.use();
 
         SDL_GL_SwapWindow(window);
     }

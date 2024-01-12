@@ -3,6 +3,7 @@
 //
 
 #include <project//light.h>
+#include <ext/matrix_transform.hpp>
 
 namespace KhEngine
 {
@@ -52,8 +53,11 @@ namespace KhEngine
 
     int indices[] = {0, 1, 3, 1,2,3};
 
-    LightSource::LightSource(glm::vec3 position){
+    LightSource::LightSource(glm::vec3 position, glm::vec3 color) :
+    lightingShader("src/shaders/light/light.vsh", "src/shaders/light/light_source.fsh")
+    {
         this->position = position;
+        this->color = color;
         loadModel();
     }
 
@@ -77,9 +81,36 @@ namespace KhEngine
         // set the vertex attribute pointers
         // vertex Positions
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float ), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float ), (void*)0);
         //glEnableVertexAttribArray(1);
         //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float), (void*)(3*sizeof(float)))
+    }
 
+    void LightSource::use()
+    {
+        lightingShader.use();
+        lightingShader.setMat4("view", view);
+        lightingShader.setMat4("projection", projection);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, position); // translate it down so it's at the center of the scene
+        model = glm::rotate(model,glm::radians(45.0f), glm::vec3(1.0f,1.0f,0.0f));
+        model = glm::scale(model, scale);	// it's a bit too big for our scene, so scale it down
+        lightingShader.setMat4("model", model);
+
+        lightingShader.setVec3("lightColor",  this->color);
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    void LightSource::setView(glm::mat4& view)
+    {
+        this->view = view;
+    }
+
+    void LightSource::setProjection(glm::mat4 &projection)
+    {
+        this->projection = projection;
     }
 }

@@ -90,6 +90,18 @@ namespace KhEngine
         int modelLoc = glGetUniformLocation(ID, name.c_str());
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(value));
     }
+    //-------------------------------------------------------------------------
+    void Shader::setVec3(const std::string &name, float x, float y, float z) const
+    {
+        int modelLoc = glGetUniformLocation(ID, name.c_str());
+        glUniform3f(modelLoc, x, y, z);
+    }
+
+    void Shader::setVec3(const std::string &name, glm::vec3 value) const
+    {
+        int modelLoc = glGetUniformLocation(ID, name.c_str());
+        glUniform3fv(modelLoc, 1, glm::value_ptr(value));
+    }
 
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
