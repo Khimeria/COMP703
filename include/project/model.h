@@ -25,7 +25,6 @@ namespace KhEngine
     public:
         Model(char *path);
         void Draw(Shader &shader);
-
         void Destroy();
 
     private:

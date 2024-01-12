@@ -96,9 +96,9 @@ namespace KhEngine
         model = glm::translate(model, position); // translate it down so it's at the center of the scene
         model = glm::rotate(model,glm::radians(45.0f), glm::vec3(1.0f,1.0f,0.0f));
         model = glm::scale(model, scale);	// it's a bit too big for our scene, so scale it down
-        lightingShader.setMat4("model", model);
 
-        lightingShader.setVec3("lightColor",  this->color);
+        lightingShader.setMat4("model", model);
+        lightingShader.setVec3("lightColor", this->color);
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -106,11 +106,28 @@ namespace KhEngine
 
     void LightSource::setView(glm::mat4& view)
     {
+        lightingShader.use();
         this->view = view;
     }
 
     void LightSource::setProjection(glm::mat4 &projection)
     {
+        lightingShader.use();
         this->projection = projection;
+    }
+
+    glm::vec3 LightSource::getLightColor()
+    {
+        return this->color;
+    }
+
+    glm::vec3 LightSource::getPosition()
+    {
+        return this->position;
+    }
+
+    void LightSource::setPosition(glm::vec3& newPos)
+    {
+        this->position = newPos;
     }
 }

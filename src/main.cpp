@@ -179,17 +179,27 @@ int main(int argc, char** argv)
 
         // get matrix's uniform location and set matrix
         auto view = camera.getViewMat4();
+
+        glm::vec3 lightPos = glm::vec3(sin(currentFrame), cos(currentFrame), 1.0f);
+        ourLightSource.setPosition(lightPos);
+        ourLightSource.setView(view);
+        ourLightSource.setProjection(projection);
+
         ourShader.use();
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
-
-        ourLightSource.setView(view);
-        ourLightSource.setProjection(projection);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
+
+        glm::mat3 normModel = transpose(inverse(model));
+        ourShader.setMat3("normalModel", normModel);
+
+        ourShader.setVec3("lightColor", ourLightSource.getLightColor());
+        ourShader.setVec3("lightPos", ourLightSource.getPosition());
+
         ourModel.Draw(ourShader);
         ourLightSource.use();
 

@@ -103,6 +103,11 @@ namespace KhEngine
         glUniform3fv(modelLoc, 1, glm::value_ptr(value));
     }
 
+    void Shader::setMat3(const std::string &name, glm::mat3 value) const {
+        int modelLoc = glGetUniformLocation(ID, name.c_str());
+        glUniformMatrix3fv(modelLoc, 1, GL_FALSE, glm::value_ptr(value));
+    }
+
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
     void Shader::checkCompileErrors(unsigned int shader, std::string type)

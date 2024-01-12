@@ -52,6 +52,7 @@ namespace KhEngine
         GLuint VAO, VBO, EBO;
 
         void setupMesh();
+
     };
 }
 

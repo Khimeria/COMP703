@@ -20,6 +20,12 @@ namespace KhEngine
         void use();
         void setView(glm::mat4& view);
         void setProjection(glm::mat4& projection);
+
+        glm::vec3 getLightColor();
+
+        void setPosition(glm::vec3& newPos);
+        glm::vec3 getPosition();
+
     private:
         GLuint VAO,VBO,EBO;
         glm::vec3 color, position = glm::vec3(0.0f), scale = glm::vec3(0.5f, 0.5f, 0.5f);
