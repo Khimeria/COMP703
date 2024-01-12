@@ -109,8 +109,8 @@ int main(int argc, char** argv)
 
     KhEngine::Shader ourShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
     KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
-    //KhEngine::Model ourModel("models/backpack/backpack.obj");
-    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.5f,0.6,0.2));
+    KhEngine::Model ourModel2("models/backpack/backpack.obj");
+    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.8f,0.9,0.9));
 
     glm::mat4 projection;
     float fov = 45.0f;
@@ -187,6 +187,21 @@ int main(int argc, char** argv)
         ourLightSource.setProjection(projection);
 
         ourShader.use();
+
+        ourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+        ourShader.setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        ourShader.setFloat("material.shininess", 32.0f);
+
+        glm::vec3 lightColor;
+        lightColor.x = sin(currentFrame * 2.0f);
+        lightColor.y = sin(currentFrame * 0.7f);
+        lightColor.z = sin(currentFrame * 1.3f);
+        
+        ourShader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
+        ourShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
 
@@ -203,6 +218,7 @@ int main(int argc, char** argv)
         ourShader.setVec3("viewPos", camera.getPosition());
 
         ourModel.Draw(ourShader);
+        ourModel2.Draw(ourShader);
         ourLightSource.use();
 
         SDL_GL_SwapWindow(window);
