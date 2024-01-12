@@ -109,7 +109,8 @@ int main(int argc, char** argv)
 
     KhEngine::Shader ourShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
     KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
-    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(1.0f));
+    //KhEngine::Model ourModel("models/backpack/backpack.obj");
+    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.5f,0.6,0.2));
 
     glm::mat4 projection;
     float fov = 45.0f;
@@ -190,7 +191,7 @@ int main(int argc, char** argv)
         ourShader.setMat4("projection", projection);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
 
@@ -199,6 +200,7 @@ int main(int argc, char** argv)
 
         ourShader.setVec3("lightColor", ourLightSource.getLightColor());
         ourShader.setVec3("lightPos", ourLightSource.getPosition());
+        ourShader.setVec3("viewPos", camera.getPosition());
 
         ourModel.Draw(ourShader);
         ourLightSource.use();

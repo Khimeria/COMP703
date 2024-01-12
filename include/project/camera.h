@@ -18,6 +18,9 @@ namespace KhEngine
         glm::mat4 getViewMat4();
         void tick(float deltaTime);
         void setSpeed(float speed);
+
+        glm::vec3 getPosition();
+
     private:
         //camera
         glm::vec3 position;

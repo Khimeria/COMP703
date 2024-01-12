@@ -64,4 +64,8 @@ namespace KhEngine
             position -= cameraRight * movementSpeed;
 
     }
+
+    glm::vec3 Camera::getPosition() {
+        return position;
+    }
 }
