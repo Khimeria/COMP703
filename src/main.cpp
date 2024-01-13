@@ -108,9 +108,11 @@ int main(int argc, char** argv)
     glViewport(0, 0, WIDTH, HEIGHT);
 
     KhEngine::Shader ourShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
-    KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
-    KhEngine::Model ourModel2("models/backpack/backpack.obj");
-    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.8f,0.9,0.9));
+    //KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
+    KhEngine::Model ourModel("models/Scene/Scene.obj");
+    //KhEngine::Model ourModel("models/backpack/backpack.obj");
+    //KhEngine::Model ourModel2("models/ForMargo (1)/Meshes/SM_Tree_Large_01.OBJ");
+    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(1.0f,1.0,0.9));
 
     glm::mat4 projection;
     float fov = 45.0f;
@@ -181,26 +183,23 @@ int main(int argc, char** argv)
         // get matrix's uniform location and set matrix
         auto view = camera.getViewMat4();
 
-        glm::vec3 lightPos = glm::vec3(sin(currentFrame), cos(currentFrame), 1.0f);
+        glm::vec3 lightPos = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
         ourLightSource.setPosition(lightPos);
         ourLightSource.setView(view);
         ourLightSource.setProjection(projection);
 
         ourShader.use();
 
-        ourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-        ourShader.setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
-        ourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        ourShader.setVec3("material2.ambient", 1.0f, 0.5f, 0.31f);
+        ourShader.setVec3("material2.specular", 0.5f, 0.5f, 0.5f);
+        ourShader.setFloat("material2.shininess", 32.0f);
         ourShader.setFloat("material.shininess", 32.0f);
 
-        glm::vec3 lightColor;
+        /*glm::vec3 lightColor;
         lightColor.x = sin(currentFrame * 2.0f);
         lightColor.y = sin(currentFrame * 0.7f);
         lightColor.z = sin(currentFrame * 1.3f);
-        
-        ourShader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
-        ourShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
-        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        ourLightSource.setColor(lightColor);*/
 
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
@@ -213,12 +212,22 @@ int main(int argc, char** argv)
         glm::mat3 normModel = transpose(inverse(model));
         ourShader.setMat3("normalModel", normModel);
 
-        ourShader.setVec3("lightColor", ourLightSource.getLightColor());
-        ourShader.setVec3("lightPos", ourLightSource.getPosition());
+        ourShader.setVec3("light.color", ourLightSource.getLightColor());
+        ourShader.setVec3("light.position", ourLightSource.getPosition());
+        ourShader.setVec3("light.direction", 0.0f, -1.0f, -0.3f);
+        ourShader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
+        ourShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setFloat("light.constant",  1.0f);
+        ourShader.setFloat("light.linear",    0.022f);
+        ourShader.setFloat("light.quadratic", 0.0019f);
+        ourShader.setFloat("light.cutOff",   glm::cos(glm::radians(12.5f)));
+        ourShader.setFloat("light.outerCutOff",   glm::cos(glm::radians(17.5f)));
+
         ourShader.setVec3("viewPos", camera.getPosition());
 
         ourModel.Draw(ourShader);
-        ourModel2.Draw(ourShader);
+        //ourModel2.Draw(ourShader);
         ourLightSource.use();
 
         SDL_GL_SwapWindow(window);

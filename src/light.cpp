@@ -130,4 +130,9 @@ namespace KhEngine
     {
         this->position = newPos;
     }
+
+    void LightSource::setColor(glm::vec3 color)
+    {
+        this->color = color;
+    }
 }

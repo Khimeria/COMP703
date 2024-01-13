@@ -26,6 +26,8 @@ namespace KhEngine
         void setPosition(glm::vec3& newPos);
         glm::vec3 getPosition();
 
+        void setColor(glm::vec3 color);
+
     private:
         GLuint VAO,VBO,EBO;
         glm::vec3 color, position = glm::vec3(0.0f), scale = glm::vec3(0.5f, 0.5f, 0.5f);
