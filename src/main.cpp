@@ -112,7 +112,8 @@ int main(int argc, char** argv)
     KhEngine::Model ourModel("models/Scene/Scene.obj");
     //KhEngine::Model ourModel("models/backpack/backpack.obj");
     //KhEngine::Model ourModel2("models/ForMargo (1)/Meshes/SM_Tree_Large_01.OBJ");
-    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(1.0f,1.0,0.9));
+    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.5f,0.5f,1.0f));
+    KhEngine::LightSource ourLightSource2(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(1.0f,1.0f,1.0f));
 
     glm::mat4 projection;
     float fov = 45.0f;
@@ -188,6 +189,9 @@ int main(int argc, char** argv)
         ourLightSource.setView(view);
         ourLightSource.setProjection(projection);
 
+        ourLightSource2.setView(view);
+        ourLightSource2.setProjection(projection);
+
         ourShader.use();
 
         ourShader.setVec3("material2.ambient", 1.0f, 0.5f, 0.31f);
@@ -195,11 +199,11 @@ int main(int argc, char** argv)
         ourShader.setFloat("material2.shininess", 32.0f);
         ourShader.setFloat("material.shininess", 32.0f);
 
-        /*glm::vec3 lightColor;
-        lightColor.x = sin(currentFrame * 2.0f);
-        lightColor.y = sin(currentFrame * 0.7f);
-        lightColor.z = sin(currentFrame * 1.3f);
-        ourLightSource.setColor(lightColor);*/
+        glm::vec3 pointerLightPos;
+        pointerLightPos.x = sin(currentFrame * 2.0f);
+        pointerLightPos.y = sin(currentFrame * 0.7f);
+        pointerLightPos.z = sin(currentFrame * 1.3f);
+        ourLightSource2.setPosition(pointerLightPos);
 
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
@@ -212,23 +216,56 @@ int main(int argc, char** argv)
         glm::mat3 normModel = transpose(inverse(model));
         ourShader.setMat3("normalModel", normModel);
 
-        ourShader.setVec3("light.color", ourLightSource.getLightColor());
-        ourShader.setVec3("light.position", ourLightSource.getPosition());
-        ourShader.setVec3("light.direction", 0.0f, -1.0f, -0.3f);
-        ourShader.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
-        ourShader.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
-        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        ourShader.setFloat("light.constant",  1.0f);
-        ourShader.setFloat("light.linear",    0.022f);
-        ourShader.setFloat("light.quadratic", 0.0019f);
-        ourShader.setFloat("light.cutOff",   glm::cos(glm::radians(12.5f)));
-        ourShader.setFloat("light.outerCutOff",   glm::cos(glm::radians(17.5f)));
+        //directLight
+        ourShader.setVec3("directLight.direction", 0.0f, -1.0f, -0.3f);
+        ourShader.setVec3("directLight.color",     0.5f, 0.5f, 1.0f);
+        ourShader.setVec3("directLight.ambient",   0.05f, 0.05f, 0.05f);
+        ourShader.setVec3("directLight.diffuse",   0.12f, 0.12f, 0.12f); // darken diffuse light a bit
+        ourShader.setVec3("directLight.specular",  0.25f, 0.25f, 0.25f);
+
+        //pointLight
+        ourShader.setVec3("pointLights[0].color", ourLightSource2.getColor());
+        ourShader.setVec3("pointLights[0].position", ourLightSource2.getPosition());
+        ourShader.setVec3("pointLights[0].direction", 0.0f, -1.0f, -0.3f);
+        ourShader.setVec3("pointLights[0].ambient",  0.1f, 0.1f, 0.1f);
+        ourShader.setVec3("pointLights[0].diffuse",  0.25f, 0.25f, 0.25f); // darken diffuse light a bit
+        ourShader.setVec3("pointLights[0].specular", 0.5f, 0.5f, 0.5f);
+        ourShader.setFloat("pointLights[0].constant",  1.0f);
+        ourShader.setFloat("pointLights[0].linear",    0.022f);
+        ourShader.setFloat("pointLights[0].quadratic", 0.0019f);
+
+        //spotLight
+        ourShader.setVec3("pointLights[0].color", ourLightSource.getColor());
+        ourShader.setVec3("pointLights[0].position", ourLightSource.getPosition());
+        ourShader.setVec3("pointLights[0].direction", 0.0f, -1.0f, -0.3f);
+        ourShader.setVec3("pointLights[0].ambient",  0.2f, 0.2f, 0.2f);
+        ourShader.setVec3("pointLights[0].diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+        ourShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setFloat("pointLights[0].constant",  1.0f);
+        ourShader.setFloat("pointLights[0].linear",    0.022f);
+        ourShader.setFloat("pointLights[0].quadratic", 0.0019f);
+        ourShader.setFloat("pointLights[0].cutOff",   glm::cos(glm::radians(12.5f)));
+        ourShader.setFloat("pointLights[0].outerCutOff",   glm::cos(glm::radians(17.5f)));
+
+
+        ourShader.setVec3("spotLights[0].color", ourLightSource2.getColor());
+        ourShader.setVec3("spotLights[0].position", ourLightSource2.getPosition());
+        ourShader.setVec3("spotLights[0].direction", 0.0f, -1.0f, -0.3f);
+        ourShader.setVec3("spotLights[0].ambient",  0.2f, 0.2f, 0.2f);
+        ourShader.setVec3("spotLights[0].diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+        ourShader.setVec3("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setFloat("spotLights[0].constant",  1.0f);
+        ourShader.setFloat("spotLights[0].linear",    0.022f);
+        ourShader.setFloat("spotLights[0].quadratic", 0.0019f);
+        ourShader.setFloat("spotLights[0].cutOff",   glm::cos(glm::radians(12.5f)));
+        ourShader.setFloat("spotLights[0].outerCutOff",   glm::cos(glm::radians(17.5f)));
 
         ourShader.setVec3("viewPos", camera.getPosition());
 
         ourModel.Draw(ourShader);
         //ourModel2.Draw(ourShader);
         ourLightSource.use();
+        ourLightSource2.use();
 
         SDL_GL_SwapWindow(window);
     }

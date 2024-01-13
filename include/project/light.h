@@ -21,7 +21,7 @@ namespace KhEngine
         void setView(glm::mat4& view);
         void setProjection(glm::mat4& projection);
 
-        glm::vec3 getLightColor();
+        glm::vec3 getColor();
 
         void setPosition(glm::vec3& newPos);
         glm::vec3 getPosition();

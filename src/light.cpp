@@ -116,7 +116,7 @@ namespace KhEngine
         this->projection = projection;
     }
 
-    glm::vec3 LightSource::getLightColor()
+    glm::vec3 LightSource::getColor()
     {
         return this->color;
     }
