@@ -25,12 +25,12 @@ namespace KhEngine
     private:
         //camera
         glm::vec3 position,direction;
-        float cameraSpeed = 0.5f;
+        float cameraSpeed = 4.0f;
         float cameraYaw = glm::radians(-90.0f);
         float cameraPitch = glm::radians(0.0f);
 
         //mouse
-        // Mouse position
+        // Mouse Position
         int mouseX, mouseY;
         float mouseSensitivity = 0.05f;
     };

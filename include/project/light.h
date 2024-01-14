@@ -12,27 +12,73 @@
 
 namespace KhEngine
 {
-    class LightSource
+    struct BaseLightSource
+    {
+        glm::vec3 Color;
+
+        glm::vec3 Ambient;
+        glm::vec3 Diffuse;
+        glm::vec3 Specular;
+    };
+
+    struct DirectLight: BaseLightSource
+    {
+        glm::vec3 Direction;
+    };
+
+
+    struct PointLight : BaseLightSource
+    {
+        unsigned long ID;
+        glm::vec3 Position;
+
+        float Constant;
+        float Linear;
+        float Quadratic;
+    };
+
+    struct SpotLight: PointLight
+    {
+        glm::vec3 Direction;
+        float CutOff;
+        float OuterCutOff;
+    };
+
+    class LightSourceManager
     {
     public:
-        LightSource(glm::vec3 position, glm::vec3 color);
-        void loadModel();
-        void use();
-        void setView(glm::mat4& view);
-        void setProjection(glm::mat4& projection);
+        LightSourceManager();
+        void Draw(Shader &shader);
 
-        glm::vec3 getColor();
+        DirectLight createDirectLightSource(glm::vec3 color, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse,
+                                            glm::vec3 specular);
 
-        void setPosition(glm::vec3& newPos);
-        glm::vec3 getPosition();
+        PointLight addPointLightSource(glm::vec3 color, glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse,
+                                         glm::vec3 specular,
+                                         float constant, float linear, float quadratic);
 
-        void setColor(glm::vec3 color);
+        SpotLight addSpotLightSource(glm::vec3 color, glm::vec3 position, glm::vec3 direction, glm::vec3 ambient,
+                                glm::vec3 diffuse,
+                                glm::vec3 specular, float constant, float linear, float quadratic, float cutOff,
+                                float outerCutOf);
+
+        void addDirectLightSource(DirectLight &light);
+
+        void addPointLightSource(PointLight &light);
+
+        void addSpotLightSource(SpotLight &light);
 
     private:
-        GLuint VAO,VBO,EBO;
+        std::vector<PointLight*> pLights;
+        std::vector<SpotLight*> sLights;
+        DirectLight* directLight ;
+
         glm::vec3 color, position = glm::vec3(0.0f), scale = glm::vec3(0.5f, 0.5f, 0.5f);
-        Shader lightingShader;
-        glm::mat4 model, view, projection;
+
+        void setPointLightToShader(Shader &shader, std::string &name, PointLight* light);
+
+        void setBaseLightToShader(Shader &shader, std::string &name, BaseLightSource* light);
+
     };
 }
 

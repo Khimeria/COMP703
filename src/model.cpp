@@ -5,15 +5,16 @@
 #include "project/model.h"
 #include "project/main.hpp"
 #include <assimp/Importer.hpp>
+#include <utility>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <SDL.h>
 
 namespace KhEngine
 {
-    Model::Model(char *path)
+    Model::Model(std::string path)
     {
-        loadModel(path);
+        Model::loadModel(std::move(path));
     }
 
     void Model::Draw(Shader &shader)
@@ -22,7 +23,8 @@ namespace KhEngine
             mesh.Draw(shader);
     }
 
-    void Model::loadModel(std::string relativePath) {
+    void Model::loadModel(std::string relativePath)
+    {
         Assimp::Importer import;
         auto cdw = std::filesystem::current_path().parent_path();
         const aiScene *scene = import.ReadFile(cdw/relativePath, aiProcess_Triangulate | aiProcess_FlipUVs);

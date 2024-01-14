@@ -1,57 +1,15 @@
 #include <project/main.hpp>
 #include "project/model.h"
 #include "project/light.h"
+#include "project/cube_go.h"
+#include "project/shader_ex.h"
+#include "project/buffer.h"
+#include "project/world.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
 
 const char *PROGRAM_NAME = "BossFight";
-
-float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-};
-
-int indices[] = {0, 1, 3, 1,2,3};
 
 int main(int argc, char** argv)
 {
@@ -106,25 +64,69 @@ int main(int argc, char** argv)
     }
 
     glViewport(0, 0, WIDTH, HEIGHT);
-
-    KhEngine::Shader ourShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
-    //KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
-    KhEngine::Model ourModel("models/Scene/Scene.obj");
-    //KhEngine::Model ourModel("models/backpack/backpack.obj");
-    //KhEngine::Model ourModel2("models/ForMargo (1)/Meshes/SM_Tree_Large_01.OBJ");
-    KhEngine::LightSource ourLightSource(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.5f,0.5f,1.0f));
-    KhEngine::LightSource ourLightSource2(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(1.0f,1.0f,1.0f));
-
-    glm::mat4 projection;
-    float fov = 45.0f;
-    projection = KhEngine::getProjection(fov);
-
     glEnable(GL_DEPTH_TEST);
 
     //camera creation
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
     glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
     auto camera = KhEngine::Camera(cameraPos, cameraTarget);
+
+    //create world
+    KhEngine::World world(camera,WIDTH,HEIGHT,45.0f);
+
+    //create shader
+    KhEngine::Shader* ourShader = KhEngine::BufferManager::GetShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
+    world.addShader(ourShader);//todo:register model instead
+
+    std::cout<<ourShader->ID<<std::endl;
+    //create models
+    KhEngine::Model ourModel("models/Scene/Scene.obj");
+    //KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
+    //KhEngine::Model ourModel("models/backpack/backpack.obj");
+    //KhEngine::Model ourModel2("models/ForMargo (1)/Meshes/SM_Tree_Large_01.OBJ");
+
+    //create GameObjects
+    KhEngine::Cube pCube;
+    world.addGameObject(pCube);
+    KhEngine::Cube sCube;
+    world.addGameObject(sCube);
+
+    //add Lights
+    KhEngine::DirectLight dLight{};
+    dLight.Color = glm::vec3(0.5f, 0.5f, 1.0f);
+    dLight.Direction = glm::vec3(0.0f, -1.0f, -0.3f);
+    dLight.Ambient = glm::vec3(0.07f);
+    dLight.Diffuse = glm::vec3(0.15f);
+    dLight.Specular = glm::vec3(0.35);
+
+    world.addDirectLight(dLight);
+
+    KhEngine::PointLight pLight{};
+    pLight.Color = glm::vec3(0.8f, 0.7f, 0.0f);
+    pLight.Position = glm::vec3(0.0f, -1.0f, -0.3f);
+    pLight.Ambient = glm::vec3(0.1f);
+    pLight.Diffuse = glm::vec3(0.25f);
+    pLight.Specular = glm::vec3(0.55f);
+    pLight.Constant = 1.0f;
+    pLight.Linear = 0.022f;
+    pLight.Quadratic = 0.0019;
+
+    world.addPointLight(pLight);
+
+    KhEngine::SpotLight sLight{};
+    sLight.Color = glm::vec3(0.5f, 0.5f, 1.0f);
+    sLight.Position = glm::vec3(0.0f, 1.0f, -1.0f);
+    sLight.Direction = glm::vec3(0.0f, -1.0f, 0.0f);
+    sLight.Ambient = glm::vec3(0.2f);
+    sLight.Diffuse = glm::vec3(0.5f);
+    sLight.Specular = glm::vec3(0.75f);
+    sLight.Constant = 1.0f;
+    sLight.Linear = 0.022f;
+    sLight.Quadratic = 0.0019;
+    sLight.CutOff = cos(glm::radians(12.5f));
+    sLight.OuterCutOff = cos(glm::radians(17.5f));
+
+    world.addSpotLight(sLight);
 
     //--- infinite loop with event queue processing
     SDL_Event event;
@@ -156,13 +158,11 @@ int main(int argc, char** argv)
                     break;
                 case SDL_MOUSEWHEEL:
                 {
-                    fov -= (float)event.wheel.y;
-                    if (fov < 1.0f)
-                        fov = 1.0f;
-                    if (fov > 45.0f)
-                        fov = 45.0f;
-
-                    projection = KhEngine::getProjection(fov);
+                    world.fov -= (float)event.wheel.y;
+                    if (world.fov < 1.0f)
+                        world.fov = 1.0f;
+                    if (world.fov > 45.0f)
+                        world.fov = 45.0f;
                 }
                     break;
 
@@ -171,7 +171,8 @@ int main(int argc, char** argv)
         } // -- while event in queue
 
         // Clear the colorbuffer
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        //glClearColor(0.4f, 0.4f, 0.7f, 1.0f);
+        glClearColor(0.04f, 0.04f, 0.07f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw OpenGL
@@ -181,91 +182,32 @@ int main(int argc, char** argv)
 
         camera.tick(deltaTime);
 
-        // get matrix's uniform location and set matrix
-        auto view = camera.getViewMat4();
+        pCube.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
 
-        glm::vec3 lightPos = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
-        ourLightSource.setPosition(lightPos);
-        ourLightSource.setView(view);
-        ourLightSource.setProjection(projection);
+        sLight.Position.x = 10*sin(currentFrame * 2.0f);
+        sLight.Position.y = sin(currentFrame * 0.7f);
+        sLight.Position.z = 5*sin(currentFrame * 1.3f);
+        sCube.Position = sLight.Position;
 
-        ourLightSource2.setView(view);
-        ourLightSource2.setProjection(projection);
+        std::cout << std::to_string(pLight.Position.x)<<" "<<std::to_string(pLight.Position.y)<<" "<<std::to_string(pLight.Position.z) <<std::endl;
 
-        ourShader.use();
+        world.tick(deltaTime);
 
-        ourShader.setVec3("material2.ambient", 1.0f, 0.5f, 0.31f);
-        ourShader.setVec3("material2.specular", 0.5f, 0.5f, 0.5f);
-        ourShader.setFloat("material2.shininess", 32.0f);
-        ourShader.setFloat("material.shininess", 32.0f);
-
-        glm::vec3 pointerLightPos;
-        pointerLightPos.x = sin(currentFrame * 2.0f);
-        pointerLightPos.y = sin(currentFrame * 0.7f);
-        pointerLightPos.z = sin(currentFrame * 1.3f);
-        ourLightSource2.setPosition(pointerLightPos);
-
-        ourShader.setMat4("view", view);
-        ourShader.setMat4("projection", projection);
+        ourShader->use();
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
-        ourShader.setMat4("model", model);
+
+        KhEngine::ShaderEx::SetModelMat4(*ourShader, model);
 
         glm::mat3 normModel = transpose(inverse(model));
-        ourShader.setMat3("normalModel", normModel);
+        ourShader->setMat3("normalModel", normModel);
 
-        //directLight
-        ourShader.setVec3("directLight.direction", 0.0f, -1.0f, -0.3f);
-        ourShader.setVec3("directLight.color",     0.5f, 0.5f, 1.0f);
-        ourShader.setVec3("directLight.ambient",   0.05f, 0.05f, 0.05f);
-        ourShader.setVec3("directLight.diffuse",   0.12f, 0.12f, 0.12f); // darken diffuse light a bit
-        ourShader.setVec3("directLight.specular",  0.25f, 0.25f, 0.25f);
+        ourShader->setFloat("material.shininess", 64.0f);
 
-        //pointLight
-        ourShader.setVec3("pointLights[0].color", ourLightSource2.getColor());
-        ourShader.setVec3("pointLights[0].position", ourLightSource2.getPosition());
-        ourShader.setVec3("pointLights[0].direction", 0.0f, -1.0f, -0.3f);
-        ourShader.setVec3("pointLights[0].ambient",  0.1f, 0.1f, 0.1f);
-        ourShader.setVec3("pointLights[0].diffuse",  0.25f, 0.25f, 0.25f); // darken diffuse light a bit
-        ourShader.setVec3("pointLights[0].specular", 0.5f, 0.5f, 0.5f);
-        ourShader.setFloat("pointLights[0].constant",  1.0f);
-        ourShader.setFloat("pointLights[0].linear",    0.022f);
-        ourShader.setFloat("pointLights[0].quadratic", 0.0019f);
-
-        //spotLight
-        ourShader.setVec3("pointLights[0].color", ourLightSource.getColor());
-        ourShader.setVec3("pointLights[0].position", ourLightSource.getPosition());
-        ourShader.setVec3("pointLights[0].direction", 0.0f, -1.0f, -0.3f);
-        ourShader.setVec3("pointLights[0].ambient",  0.2f, 0.2f, 0.2f);
-        ourShader.setVec3("pointLights[0].diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
-        ourShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-        ourShader.setFloat("pointLights[0].constant",  1.0f);
-        ourShader.setFloat("pointLights[0].linear",    0.022f);
-        ourShader.setFloat("pointLights[0].quadratic", 0.0019f);
-        ourShader.setFloat("pointLights[0].cutOff",   glm::cos(glm::radians(12.5f)));
-        ourShader.setFloat("pointLights[0].outerCutOff",   glm::cos(glm::radians(17.5f)));
-
-
-        ourShader.setVec3("spotLights[0].color", ourLightSource2.getColor());
-        ourShader.setVec3("spotLights[0].position", ourLightSource2.getPosition());
-        ourShader.setVec3("spotLights[0].direction", 0.0f, -1.0f, -0.3f);
-        ourShader.setVec3("spotLights[0].ambient",  0.2f, 0.2f, 0.2f);
-        ourShader.setVec3("spotLights[0].diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
-        ourShader.setVec3("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
-        ourShader.setFloat("spotLights[0].constant",  1.0f);
-        ourShader.setFloat("spotLights[0].linear",    0.022f);
-        ourShader.setFloat("spotLights[0].quadratic", 0.0019f);
-        ourShader.setFloat("spotLights[0].cutOff",   glm::cos(glm::radians(12.5f)));
-        ourShader.setFloat("spotLights[0].outerCutOff",   glm::cos(glm::radians(17.5f)));
-
-        ourShader.setVec3("viewPos", camera.getPosition());
-
-        ourModel.Draw(ourShader);
+        ourModel.Draw(*ourShader);
         //ourModel2.Draw(ourShader);
-        ourLightSource.use();
-        ourLightSource2.use();
 
         SDL_GL_SwapWindow(window);
     }
@@ -279,9 +221,7 @@ int main(int argc, char** argv)
     return EXIT_SUCCESS;
 }
 
-glm::mat4 KhEngine::getProjection(float fov) {
-    return glm::perspective(glm::radians(fov), 1.0f * WIDTH / HEIGHT, 0.1f, 100.0f);
-}
+
 
 void KhEngine::setCursorMode(SDL_Window* window, int state) {
     SDL_ShowCursor(state);

@@ -34,6 +34,13 @@ add_executable(project
 		include/project/main.hpp
 		include/project/light.h
 		src/light.cpp
+		include/project/game_object.h
+		include/project/cube_go.h
+		include/project/buffer.h
+		include/project/shader_ex.h
+		include/project/world.h
+		include/project/IDestroyable.h
+		include/project/buffer.cpp
 )
 add_subdirectory( src )
 

@@ -13,7 +13,7 @@
 namespace KhEngine
 {
     struct Vertex {
-        // position
+        // Position
         glm::vec3 Position;
         // normal
         glm::vec3 Normal;

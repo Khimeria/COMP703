@@ -84,6 +84,13 @@ build CMakeFiles/project.dir/src/light.cpp.o: CXX_COMPILER__project_unscanned_De
   OBJECT_DIR = CMakeFiles/project.dir
   OBJECT_FILE_DIR = CMakeFiles/project.dir/src
 
+build CMakeFiles/project.dir/include/project/buffer.cpp.o: CXX_COMPILER__project_unscanned_Debug /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include/project/buffer.cpp || cmake_object_order_depends_target_project
+  DEP_FILE = CMakeFiles/project.dir/include/project/buffer.cpp.o.d
+  FLAGS = -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics
+  INCLUDES = -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include
+  OBJECT_DIR = CMakeFiles/project.dir
+  OBJECT_FILE_DIR = CMakeFiles/project.dir/include/project
+
 build CMakeFiles/project.dir/src/main.cpp.o: CXX_COMPILER__project_unscanned_Debug /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/main.cpp || cmake_object_order_depends_target_project
   DEP_FILE = CMakeFiles/project.dir/src/main.cpp.o.d
   FLAGS = -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics
@@ -99,7 +106,7 @@ build CMakeFiles/project.dir/src/main.cpp.o: CXX_COMPILER__project_unscanned_Deb
 #############################################
 # Link the executable project
 
-build project: CXX_EXECUTABLE_LINKER__project_Debug CMakeFiles/project.dir/src/shader.cpp.o CMakeFiles/project.dir/src/camera.cpp.o CMakeFiles/project.dir/src/mesh.cpp.o CMakeFiles/project.dir/src/model.cpp.o CMakeFiles/project.dir/src/light.cpp.o CMakeFiles/project.dir/src/main.cpp.o | /opt/homebrew/Cellar/sdl2/2.28.5/lib/libSDL2.dylib /opt/homebrew/Cellar/glew/2.2.0_1/lib/libGLEW.dylib /opt/homebrew/Cellar/sdl_image/1.2.12_10/lib/libSDL_image.dylib /opt/homebrew/Cellar/assimp/5.3.1/lib/libassimp.dylib
+build project: CXX_EXECUTABLE_LINKER__project_Debug CMakeFiles/project.dir/src/shader.cpp.o CMakeFiles/project.dir/src/camera.cpp.o CMakeFiles/project.dir/src/mesh.cpp.o CMakeFiles/project.dir/src/model.cpp.o CMakeFiles/project.dir/src/light.cpp.o CMakeFiles/project.dir/include/project/buffer.cpp.o CMakeFiles/project.dir/src/main.cpp.o | /opt/homebrew/Cellar/sdl2/2.28.5/lib/libSDL2.dylib /opt/homebrew/Cellar/glew/2.2.0_1/lib/libGLEW.dylib /opt/homebrew/Cellar/sdl_image/1.2.12_10/lib/libSDL_image.dylib /opt/homebrew/Cellar/assimp/5.3.1/lib/libassimp.dylib
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0
   LINK_LIBRARIES = /opt/homebrew/Cellar/sdl2/2.28.5/lib/libSDL2.dylib  /opt/homebrew/Cellar/glew/2.2.0_1/lib/libGLEW.dylib  /opt/homebrew/Cellar/sdl_image/1.2.12_10/lib/libSDL_image.dylib  /opt/homebrew/Cellar/assimp/5.3.1/lib/libassimp.dylib
   OBJECT_DIR = CMakeFiles/project.dir

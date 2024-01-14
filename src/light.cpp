@@ -7,132 +7,147 @@
 
 namespace KhEngine
 {
-    float vertices[] = {
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
-    int indices[] = {0, 1, 3, 1,2,3};
-
-    LightSource::LightSource(glm::vec3 position, glm::vec3 color) :
-    lightingShader("src/shaders/light/light.vsh", "src/shaders/light/light_source.fsh")
+    LightSourceManager::LightSourceManager()
     {
-        this->position = position;
-        this->color = color;
-        loadModel();
     }
 
-    void LightSource::loadModel()
+    DirectLight LightSourceManager::createDirectLightSource(glm::vec3 color,
+                                                            glm::vec3 direction,
+                                                            glm::vec3 ambient,
+                                                            glm::vec3 diffuse,
+                                                            glm::vec3 specular)
     {
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
 
-        glBindVertexArray(VAO);
-        // load data into vertex buffers
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // A great thing about structs is that their memory layout is sequential for all its items.
-        // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-        // again translates to 3/2 floats which translates to a byte array.
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+        directLight->Color = color;
+        directLight->Direction = direction;
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
+        directLight->Ambient = ambient;
+        directLight->Diffuse = diffuse;
+        directLight->Specular = specular;
 
-        // set the vertex attribute pointers
-        // vertex Positions
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float ), (void*)0);
-        //glEnableVertexAttribArray(1);
-        //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float), (void*)(3*sizeof(float)))
+        return *directLight;
     }
 
-    void LightSource::use()
+    PointLight LightSourceManager::addPointLightSource(glm::vec3 color,
+                                                         glm::vec3 position,
+                                                         glm::vec3 ambient,
+                                                         glm::vec3 diffuse,
+                                                         glm::vec3 specular,
+                                                         float constant,
+                                                         float linear,
+                                                         float quadratic)
     {
-        lightingShader.use();
-        lightingShader.setMat4("view", view);
-        lightingShader.setMat4("projection", projection);
+        PointLight light{};
+        light.ID = pLights.size();
+        light.Color = color;
+        light.Position = position;
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, position); // translate it down so it's at the center of the scene
-        model = glm::rotate(model,glm::radians(45.0f), glm::vec3(1.0f,1.0f,0.0f));
-        model = glm::scale(model, scale);	// it's a bit too big for our scene, so scale it down
+        light.Ambient = ambient;
+        light.Diffuse = diffuse;
+        light.Specular = specular;
 
-        lightingShader.setMat4("model", model);
-        lightingShader.setVec3("lightColor", this->color);
+        light.Constant = constant;
+        light.Linear = linear;
+        light.Quadratic = quadratic;
 
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        pLights.push_back(&light);
+
+        return light;
     }
 
-    void LightSource::setView(glm::mat4& view)
+    SpotLight LightSourceManager::addSpotLightSource(glm::vec3 color,
+                                                      glm::vec3 position,
+                                                      glm::vec3 direction,
+                                                      glm::vec3 ambient,
+                                                      glm::vec3 diffuse,
+                                                      glm::vec3 specular,
+                                                      float constant,
+                                                      float linear,
+                                                      float quadratic,
+                                                      float cutOff,
+                                                      float outerCutOf)
     {
-        lightingShader.use();
-        this->view = view;
+        SpotLight light{};
+        light.ID = sLights.size();
+        light.Color = color;
+        light.Position = position;
+        light.Direction = direction;
+
+        light.Ambient = ambient;
+        light.Diffuse = diffuse;
+        light.Specular = specular;
+
+        light.Constant = constant;
+        light.Linear = linear;
+        light.Quadratic = quadratic;
+
+        light.CutOff = cutOff;
+        light.OuterCutOff = outerCutOf;
+
+        sLights.push_back(&light);
+
+        return light;
     }
 
-    void LightSource::setProjection(glm::mat4 &projection)
+    void LightSourceManager::Draw(Shader& shader)
     {
-        lightingShader.use();
-        this->projection = projection;
+        if(directLight != nullptr)
+        {
+            shader.setVec3("directLight.direction", directLight->Direction);
+            std::string name = "directLight";
+            setBaseLightToShader(shader, name, directLight);
+        }
+
+        for(int i=0; i< pLights.size(); i++)
+        {
+            auto light = pLights[i];
+            std::ostringstream str;
+            str << "pointLights[" << i << "]";
+            std::string name = str.str();
+            setPointLightToShader(shader,name,light);
+        }
+        for(int i=0; i< sLights.size(); i++)
+        {
+            auto light = sLights[i];
+            std::ostringstream str;
+            str << "spotLights[" << i << "]";
+            std::string name= str.str();
+            setPointLightToShader(shader,name,light);
+            shader.setVec3(name+".direction", light->Direction);
+            shader.setFloat(name+".cutOff", light->CutOff);
+            shader.setFloat(name+".outerCutOff", light->OuterCutOff);
+        }
     }
 
-    glm::vec3 LightSource::getColor()
+    void LightSourceManager:: setPointLightToShader(Shader& shader, std::string& name, PointLight* light)
     {
-        return this->color;
+        setBaseLightToShader(shader, name, light);
+        shader.setVec3(name+".position",  light->Position);
+        std::cout <<name<< " "<<std::to_string(shader.ID)<<": " << std::to_string(light->Position.x)<<" "<<std::to_string(light->Position.y)<<" "<<std::to_string(light->Position.z) <<std::endl;
+        shader.setFloat(name+".constant",  light->Constant);
+        shader.setFloat(name+".linear",    light->Linear);
+        shader.setFloat(name+".quadratic", light->Quadratic);
     }
 
-    glm::vec3 LightSource::getPosition()
+    void LightSourceManager:: setBaseLightToShader(Shader& shader, std::string & name, BaseLightSource* light)
     {
-        return this->position;
+        shader.setVec3(name + ".color",     light->Color);
+        shader.setVec3(name + ".ambient",   light->Ambient);
+        shader.setVec3(name + ".diffuse",   light->Diffuse); // darken diffuse light a bit
+        shader.setVec3(name + ".specular",  light->Specular);
     }
 
-    void LightSource::setPosition(glm::vec3& newPos)
-    {
-        this->position = newPos;
+    void LightSourceManager::addDirectLightSource(DirectLight &light) {
+        directLight = &light;
     }
 
-    void LightSource::setColor(glm::vec3 color)
-    {
-        this->color = color;
+    void LightSourceManager::addPointLightSource(PointLight &light) {
+        light.ID = pLights.size();
+        pLights.push_back(&light);
+    }
+
+    void LightSourceManager::addSpotLightSource(SpotLight &light) {
+        light.ID = sLights.size();
+        sLights.push_back(&light);
     }
 }
