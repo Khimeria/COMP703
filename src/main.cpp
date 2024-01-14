@@ -5,6 +5,7 @@
 #include "project/shader_ex.h"
 #include "project/buffer.h"
 #include "project/world.h"
+#include "project/terrain.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -75,12 +76,9 @@ int main(int argc, char** argv)
     KhEngine::World world(camera,WIDTH,HEIGHT,45.0f);
 
     //create shader
-    KhEngine::Shader* ourShader = KhEngine::BufferManager::GetShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
-    world.addShader(ourShader);//todo:register model instead
-
-    std::cout<<ourShader->ID<<std::endl;
+    KhEngine::Shader* ourShader = KhEngine::RenderManager::GetShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
     //create models
-    KhEngine::Model ourModel("models/Scene/Scene.obj");
+    //KhEngine::Model ourModel("models/Scene/Scene.obj");
     //KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
     //KhEngine::Model ourModel("models/backpack/backpack.obj");
     //KhEngine::Model ourModel2("models/ForMargo (1)/Meshes/SM_Tree_Large_01.OBJ");
@@ -90,6 +88,10 @@ int main(int argc, char** argv)
     world.addGameObject(pCube);
     KhEngine::Cube sCube;
     world.addGameObject(sCube);
+    KhEngine::TerrainGameObject terrain(*ourShader);
+    world.addGameObject(terrain);
+    KhEngine::ModelGameObject goblin("models/Resault/LitleGoblen.obj", *ourShader);
+    world.addGameObject(goblin);
 
     //add Lights
     KhEngine::DirectLight dLight{};
@@ -189,30 +191,12 @@ int main(int argc, char** argv)
         sLight.Position.z = 5*sin(currentFrame * 1.3f);
         sCube.Position = sLight.Position;
 
-        std::cout << std::to_string(pLight.Position.x)<<" "<<std::to_string(pLight.Position.y)<<" "<<std::to_string(pLight.Position.z) <<std::endl;
-
         world.tick(deltaTime);
-
-        ourShader->use();
-
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	// it's a bit too big for our scene, so scale it down
-
-        KhEngine::ShaderEx::SetModelMat4(*ourShader, model);
-
-        glm::mat3 normModel = transpose(inverse(model));
-        ourShader->setMat3("normalModel", normModel);
-
-        ourShader->setFloat("material.shininess", 64.0f);
-
-        ourModel.Draw(*ourShader);
-        //ourModel2.Draw(ourShader);
 
         SDL_GL_SwapWindow(window);
     }
 
-    ourModel.Destroy();
+    world.Destroy();
 
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);

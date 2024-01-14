@@ -40,7 +40,9 @@ add_executable(project
 		include/project/shader_ex.h
 		include/project/world.h
 		include/project/IDestroyable.h
-		include/project/buffer.cpp
+        src/buffer.cpp
+		include/project/terrain.h
+		include/project/model_go.h
 )
 add_subdirectory( src )
 

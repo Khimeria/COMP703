@@ -8,7 +8,6 @@
 #include "game_object.h"
 #include "shader.h"
 #include <glew.h>
-#include <ext/matrix_transform.hpp>
 #include "project/buffer.h"
 
 namespace KhEngine
@@ -19,28 +18,22 @@ namespace KhEngine
         Cube(): GameObject("src/shaders/light/light.vsh","src/shaders/light/light_source.fsh")
         {
             typeHash = typeid(this).hash_code();
-            if(!BufferManager::bufferAlreadyExist(typeHash))
+            if(!RenderManager::bufferAlreadyExist(typeHash))
             {
                 loadModel();
             }
             else
             {
-                VAO = BufferManager::GetVAO(typeHash);
+                VAO = RenderManager::GetVAO(typeHash);
             }
         }
-        void Draw() override
+
+        void Draw(Shader& shader) override
         {
-            shader->use();
-
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, Position); // translate it down so it's at the center of the scene
-            model = glm::rotate(model,glm::radians(Rotation.x), glm::vec3(1.0f,0.0f,0.0f));
-            model = glm::rotate(model,glm::radians(Rotation.y), glm::vec3(0.0f,1.0f,0.0f));
-            model = glm::rotate(model,glm::radians(Rotation.z), glm::vec3(0.0f,0.0f,1.0f));
-            model = glm::scale(model, Scale);	// it's a bit too big for our scene, so scale it down
-
-            shader->setMat4("model", model);
-            shader->setVec3("lightColor", Color);
+            glm::mat4 model = getModelMatrix();
+            shader.use();
+            shader.setMat4("model", model);
+            shader.setVec3("lightColor", Color);
 
             glBindVertexArray(VAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -102,7 +95,7 @@ namespace KhEngine
 
                 //int indices[] = {0, 1, 3, 1,2,3};
 
-                BufferManager::GenBuffer(typeHash, &VAO, &VBO, nullptr);
+                RenderManager::GenBuffer(typeHash, &VAO, &VBO, nullptr);
 
                 glBindVertexArray(VAO);
                 // load data into vertex buffers

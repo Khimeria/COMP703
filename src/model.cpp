@@ -124,6 +124,9 @@ namespace KhEngine
         std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
+        std::vector<Texture> emissionMaps = loadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emission");
+        textures.insert(textures.end(), emissionMaps.begin(), emissionMaps.end());
+
         // return a mesh object created from the extracted mesh data
 
         return Mesh(vertices, indices, textures);

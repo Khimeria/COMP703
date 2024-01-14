@@ -123,7 +123,6 @@ namespace KhEngine
     {
         setBaseLightToShader(shader, name, light);
         shader.setVec3(name+".position",  light->Position);
-        std::cout <<name<< " "<<std::to_string(shader.ID)<<": " << std::to_string(light->Position.x)<<" "<<std::to_string(light->Position.y)<<" "<<std::to_string(light->Position.z) <<std::endl;
         shader.setFloat(name+".constant",  light->Constant);
         shader.setFloat(name+".linear",    light->Linear);
         shader.setFloat(name+".quadratic", light->Quadratic);

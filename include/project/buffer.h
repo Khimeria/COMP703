@@ -12,7 +12,7 @@
 
 namespace KhEngine
 {
-    class BufferManager
+    class RenderManager
     {
     public:
         static std::unordered_map<unsigned long, GLuint> userMap;
@@ -28,7 +28,7 @@ namespace KhEngine
             if(VAO != nullptr)
             {
                 glGenVertexArrays(1, VAO);
-                BufferManager::userMap.insert({typeHash, *VAO});
+                RenderManager::userMap.insert({typeHash, *VAO});
             }
 
             if(VBO != nullptr)
