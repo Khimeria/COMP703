@@ -2,8 +2,8 @@
 // Created by Marharyta Haichuk on 13/01/2024.
 //
 
-#ifndef M_BOSSFIGHT_BUFFER_H
-#define M_BOSSFIGHT_BUFFER_H
+#ifndef M_BOSSFIGHT_RENDERMANAGER_H
+#define M_BOSSFIGHT_RENDERMANAGER_H
 
 #include <string>
 #include <glew.h>
@@ -77,4 +77,4 @@ namespace KhEngine
     };
 }
 
-#endif //M_BOSSFIGHT_BUFFER_H
+#endif //M_BOSSFIGHT_RENDERMANAGER_H

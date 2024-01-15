@@ -34,19 +34,19 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 81,
+				"line" : 82,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 65,
+				"line" : 66,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 71,
+				"line" : 72,
 				"parent" : 0
 			},
 			{
@@ -112,8 +112,9 @@
 				2,
 				3,
 				10,
+				15,
 				17,
-				20
+				21
 			]
 		}
 	],
@@ -171,8 +172,9 @@
 				2,
 				3,
 				10,
+				15,
 				17,
-				20
+				21
 			]
 		},
 		{
@@ -189,10 +191,10 @@
 				12,
 				13,
 				14,
-				15,
 				16,
 				18,
-				19
+				19,
+				20
 			]
 		}
 	],
@@ -260,22 +262,17 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/project/game_object.h",
+			"path" : "include/project/gameObject/game_object.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/project/cube_go.h",
+			"path" : "include/project/gameObject/primitive_go.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/project/buffer.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"path" : "include/project/shader_ex.h",
+			"path" : "include/project/renderManager.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -285,23 +282,34 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/project/IDestroyable.h",
+			"compileGroupIndex" : 0,
+			"path" : "src/renderManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/project/gameObject/model_go.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/buffer.cpp",
+			"path" : "src/playerController.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/project/terrain.h",
+			"path" : "include/project/playerController.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/project/model_go.h",
+			"path" : "include/project/iInputController.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/project/iDestroyable.h",
 			"sourceGroupIndex" : 1
 		},
 		{

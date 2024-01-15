@@ -1,7 +1,7 @@
 //
 // Created by Marharyta Haichuk on 14/01/2024.
 //
-#include "project/buffer.h"
+#include "project/renderManager.h"
 
 namespace KhEngine
 {

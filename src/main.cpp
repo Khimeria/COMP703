@@ -1,11 +1,10 @@
 #include <project/main.hpp>
-#include "project/model.h"
 #include "project/light.h"
-#include "project/cube_go.h"
-#include "project/shader_ex.h"
-#include "project/buffer.h"
+#include <project/gameObject/model_go.h>
+#include <project/gameObject/primitive_go.h>
+#include "project/renderManager.h"
 #include "project/world.h"
-#include "project/terrain.h"
+#include "project/playerController.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -66,10 +65,12 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, WIDTH, HEIGHT);
     glEnable(GL_DEPTH_TEST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 20);
+    //glEnable(GL_FRAMEBUFFER_SRGB);
 
     //camera creation
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 3.0f);
     auto camera = KhEngine::Camera(cameraPos, cameraTarget);
 
     //create world
@@ -90,8 +91,15 @@ int main(int argc, char** argv)
     world.addGameObject(sCube);
     KhEngine::TerrainGameObject terrain(*ourShader);
     world.addGameObject(terrain);
-    KhEngine::ModelGameObject goblin("models/Resault/LitleGoblen.obj", *ourShader);
+    KhEngine::GoblinGameObject goblin(*ourShader);
     world.addGameObject(goblin);
+
+    //KhEngine::PlayerController player(goblin, -camera.Forward);
+    //player.mask = glm::vec3(1.0f,0.0f,-1.0f);
+
+    camera.setPosition(glm::vec3(0.0f, 20.0f, 20.0f));
+
+    //camera.BindTo(player,  );
 
     //add Lights
     KhEngine::DirectLight dLight{};
@@ -182,14 +190,31 @@ int main(int argc, char** argv)
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        auto prevCameraPos = camera.getPosition();
         camera.tick(deltaTime);
+        auto curCameraPos = camera.getPosition();
 
-        pCube.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
+        //player.tick(deltaTime);
+
+        //goblin.transform.Position = camera.getPosition() - cameraOffset;
+//        auto pos = goblin.transform.Position;//goblin.transform.Position;glm::`vec3(0.0f,0.0f,1.0f)`
+//        auto mask = glm::vec3(1.0f,0.0f,-1.0f);
+//        auto model = glm::lookAt(pos, pos + mask *camera.Forward, glm::vec3(0.0f,1.0f,0.0f));
+//        model = glm::translate(model, (curCameraPos - prevCameraPos));
+//        model = glm::scale(model, glm::vec3(10.0f));
+
+        //goblin.setModelView(model);
+
+
+
+        std::cout<<goblin.transform.Position.x<<", "<<goblin.transform.Position.y<<", "<<goblin.transform.Position.z<<std::endl;
+
+        pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
 
         sLight.Position.x = 10*sin(currentFrame * 2.0f);
         sLight.Position.y = sin(currentFrame * 0.7f);
         sLight.Position.z = 5*sin(currentFrame * 1.3f);
-        sCube.Position = sLight.Position;
+        sCube.transform.Position = sLight.Position;
 
         world.tick(deltaTime);
 
