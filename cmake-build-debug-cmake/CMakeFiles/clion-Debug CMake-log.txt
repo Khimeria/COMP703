@@ -6,7 +6,7 @@ CMake Deprecation Warning at /opt/homebrew/lib/cmake/glm/glmConfig.cmake:1 (cmak
   Update the VERSION argument <min> value or use a ...<max> suffix to tell
   CMake that the project does not need compatibility with older versions.
 Call Stack (most recent call first):
-  CMakeLists.txt:42 (find_package)
+  CMakeLists.txt:53 (find_package)
 
 
 CMake Deprecation Warning at /opt/homebrew/lib/cmake/glm/glmConfig.cmake:2 (cmake_policy):
@@ -16,7 +16,7 @@ CMake Deprecation Warning at /opt/homebrew/lib/cmake/glm/glmConfig.cmake:2 (cmak
   Update the VERSION argument <min> value or use a ...<max> suffix to tell
   CMake that the project does not need compatibility with older versions.
 Call Stack (most recent call first):
-  CMakeLists.txt:42 (find_package)
+  CMakeLists.txt:53 (find_package)
 
 
 -- Configuring done (0.1s)

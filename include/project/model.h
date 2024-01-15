@@ -10,6 +10,7 @@
 #include <assimp/scene.h>
 #include <assimp/mesh.h>
 #include <assimp/material.h>
+#include <project/game_object.h>
 
 namespace KhEngine
 {
@@ -22,23 +23,22 @@ namespace KhEngine
 
     class Model
     {
-    public:
-        Model(char *path);
-        void Draw(Shader &shader);
+        public:
+            Model(std::string path);
+            void Draw(Shader &shader);
+            void Destroy();
 
-        void Destroy();
+        private:
+            // model data
+            std::vector<Texture> textures_loaded;
+            std::vector<Mesh> meshes;
+            std::string directory;
 
-    private:
-        // model data
-        std::vector<Texture> textures_loaded;
-        std::vector<Mesh> meshes;
-        std::string directory;
-
-        void loadModel(std::string relativePath);
-        void processNode(aiNode *node, const aiScene *scene);
-        Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-        std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
-        Material loadMaterial(aiMaterial* mat);
+            void loadModel(std::string relativePath);
+            void processNode(aiNode *node, const aiScene *scene);
+            Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+            std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+            Material loadMaterial(aiMaterial* mat);
     };
 }
 

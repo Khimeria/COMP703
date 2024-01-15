@@ -5,15 +5,16 @@
 #include "project/model.h"
 #include "project/main.hpp"
 #include <assimp/Importer.hpp>
+#include <utility>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <SDL.h>
 
 namespace KhEngine
 {
-    Model::Model(char *path)
+    Model::Model(std::string path)
     {
-        loadModel(path);
+        Model::loadModel(std::move(path));
     }
 
     void Model::Draw(Shader &shader)
@@ -22,7 +23,8 @@ namespace KhEngine
             mesh.Draw(shader);
     }
 
-    void Model::loadModel(std::string relativePath) {
+    void Model::loadModel(std::string relativePath)
+    {
         Assimp::Importer import;
         auto cdw = std::filesystem::current_path().parent_path();
         const aiScene *scene = import.ReadFile(cdw/relativePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -91,6 +93,35 @@ namespace KhEngine
                 vertex.useDiffuseTexture = mat->GetTextureCount(aiTextureType_DIFFUSE) > 0 ? 1.0f: 0.0f;
             }
 
+            //calc tangent space
+            // positions
+            glm::vec3 pos1(-1.0,  1.0, 0.0);
+            glm::vec3 pos2(-1.0, -1.0, 0.0);
+            glm::vec3 pos3( 1.0, -1.0, 0.0);
+            glm::vec3 pos4( 1.0,  1.0, 0.0);
+            // texture coordinates
+            glm::vec2 uv1(0.0, 1.0);
+            glm::vec2 uv2(0.0, 0.0);
+            glm::vec2 uv3(1.0, 0.0);
+            glm::vec2 uv4(1.0, 1.0);
+            // normal vector
+            glm::vec3 nm(0.0, 0.0, 1.0);
+
+            glm::vec3 edge1 = pos2 - pos1;
+            glm::vec3 edge2 = pos3 - pos1;
+            glm::vec2 deltaUV1 = uv2 - uv1;
+            glm::vec2 deltaUV2 = uv3 - uv1;
+
+            float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+            vertex.Tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+            vertex.Tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+            vertex.Tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+            vertex.Bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+            vertex.Bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+            vertex.Bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+
             vertices.push_back(vertex);
         }
         // process indices
@@ -121,6 +152,9 @@ namespace KhEngine
         // 4. height maps
         std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
+        std::vector<Texture> emissionMaps = loadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emission");
+        textures.insert(textures.end(), emissionMaps.begin(), emissionMaps.end());
 
         // return a mesh object created from the extracted mesh data
 

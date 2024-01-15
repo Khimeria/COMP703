@@ -21,10 +21,11 @@ namespace KhEngine
 
     void Mesh::Draw(Shader &shader)
     {
-        GLuint diffuseNr  = 1;
-        GLuint specularNr = 1;
-        GLuint normalNr   = 1;
-        GLuint heightNr   = 1;
+        GLuint diffuseNr  = 0;
+        GLuint specularNr = 0;
+        GLuint normalNr   = 0;
+        GLuint heightNr   = 0;
+        GLuint emissionNr   = 0;
         for(GLuint i = 0; i < textures.size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
@@ -38,14 +39,22 @@ namespace KhEngine
             else if(name == "texture_normal")
                 number = std::to_string(normalNr++); // transfer unsigned int to string
             else if(name == "texture_height")
-                number = std::to_string(heightNr++); // transfer unsigned int to string
+                number = std::to_string(heightNr++);
+            else if(name == "texture_emission")
+                number = std::to_string(emissionNr++);// transfer unsigned int to string
 
             // now set the sampler to the correct texture unit
-            glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+            std::ostringstream stream;
+            stream<<"material."<<name<<"["<<number<<"]";
+            glUniform1i(glGetUniformLocation(shader.ID, stream.str().c_str()), i);
             // and finally bind the texture
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
 
+        if(emissionNr>0)
+            shader.setFloat("material.useEmission", 1.0f);
+        else
+            shader.setFloat("material.useEmission", 0.0f);
         // draw mesh
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -104,6 +113,7 @@ namespace KhEngine
         // useTextures
         glEnableVertexAttribArray(8);
         glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, useDiffuseTexture));
+
         glBindVertexArray(0);
     }
 

@@ -26,8 +26,6 @@ namespace KhEngine
     void flip_surface(SDL_Surface* surface);
 
     void setCursorMode(SDL_Window* window, int state);
-
-    glm::mat4 getProjection(float fov);
 }
 
 

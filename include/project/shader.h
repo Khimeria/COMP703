@@ -29,12 +29,15 @@ namespace KhEngine{
             void setFloat(const std::string &name, float value) const;
 
             void setMat4(const std::string &name, glm::mat4 value) const;
+            void setMat3(const std::string &name, glm::mat3 value) const;
+            void setVec3(const std::string &name, float x, float y, float z) const;
+            void setVec3(const std::string &name, glm::vec3 value) const;
 
-        private:
+    private:
             // utility function for checking shader compilation/linking errors.
             // ------------------------------------------------------------------------
             void checkCompileErrors(unsigned int shader, std::string type);
-        };
+    };
 }
 
 #endif
