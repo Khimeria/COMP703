@@ -36,17 +36,20 @@ namespace KhEngine
         }
 
         void addForce(float accumulation, glm::vec3 direction){
-            auto exist = mass * force.accumulation * force.direction;
-            auto newOne = mass * accumulation * direction;
-            auto resultForce = exist + newOne;
+            force.accumulation = accumulation;
+            force.direction = direction;
 
-            auto dotProduct = glm::dot(glm::normalize(exist),glm::normalize(newOne));
-            this->force.accumulation = (float)std::sqrt(pow(force.accumulation, 2) + pow(accumulation, 2) +
-                    2 * force.accumulation * accumulation * dotProduct);
-            auto test = (float)std::sqrt(resultForce.x*resultForce.x+resultForce.y*resultForce.y+resultForce.z*resultForce.z)/mass;
-            if(force.accumulation == test)
-                std::cout<<"WOW"<<std::endl;
-            force.direction = glm::normalize(resultForce);
+//            auto exist = mass * force.accumulation * force.direction;
+//            auto newOne = mass * accumulation * direction;
+//            auto resultForce = exist + newOne;
+//
+//            auto dotProduct = glm::dot(glm::normalize(exist),glm::normalize(newOne));
+//            this->force.accumulation = (float)std::sqrt(pow(force.accumulation, 2) + pow(accumulation, 2) +
+//                    2 * force.accumulation * accumulation * dotProduct);
+//            auto test = (float)std::sqrt(resultForce.x*resultForce.x+resultForce.y*resultForce.y+resultForce.z*resultForce.z)/mass;
+//            if(force.accumulation == test)
+//                std::cout<<"WOW"<<std::endl;
+//            force.direction = glm::normalize(resultForce);
         }
     };
 
@@ -83,33 +86,30 @@ namespace KhEngine
         }
 
         void tick(float deltaTime){
-            deltaTime /=360.0f;
+            deltaTime /= 2.0f;
             time += deltaTime;
 
             for(int i=0; i<objects.size();i++)
             {
-                float velocityTime = time - objects[i].startTime;
+                float velocityTime = time;
 
                 if(objects[i].Object->transform.Position.y <= 0.0f)
                 {
                     //hit plane
-                    float accumulation = (objects[i].velocity - objects[i].startVelocity) / velocityTime;
+                    float accumulation = 0.65f * objects[i].force.accumulation;
 
                     glm::vec3 planeNormal = glm::vec3(0.0f,1.0f,0.0f);
                     auto cos = glm::dot(objects[i].force.direction,planeNormal);
                     glm::vec3 reflectDir = objects[i].force.direction - 2*cos*planeNormal;
 
-                    objects[i].addForce(0.8f * accumulation, reflectDir);
-
-                    objects[i].startVelocity = objects[i].velocity;
-                    objects[i].startTime = time;
+                    objects[i].addForce(accumulation, reflectDir);
                 }
 
                 calcResultantForce(objects[i]);
 
                 objects[i].velocity = objects[i].startVelocity + objects[i].force.accumulation * velocityTime / objects[i].mass;
 
-                auto r = objects[i].velocity * velocityTime * objects[i].force.direction;
+                auto r = objects[i].velocity * deltaTime * objects[i].force.direction;
                 objects[i].Object->transform.Position = max(objects[i].Object->transform.Position + r, glm::vec3(0.0f));
             }
         }
