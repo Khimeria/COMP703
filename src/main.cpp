@@ -4,7 +4,7 @@
 #include <project/gameObject/primitive_go.h>
 #include "project/renderManager.h"
 #include "project/world.h"
-#include "project/playerController.h"
+#include "project/physics/physic_manager.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -65,7 +65,8 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, WIDTH, HEIGHT);
     glEnable(GL_DEPTH_TEST);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 20);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glDepthMask(GL_TRUE);
     //glEnable(GL_FRAMEBUFFER_SRGB);
 
     //camera creation
@@ -103,6 +104,33 @@ int main(int argc, char** argv)
     int mouseX, mouseY;
     player.bindMouseInput(mouseX, mouseY);
     camera.bindMouseInput(mouseX, mouseY);
+
+    KhEngine::PhysicEnvironment environment;
+    environment.AddForce(9.80665f, glm::vec3(0.0f,-1.0f,0.0f));
+
+    KhEngine::PointLight fallLights[6];
+    KhEngine::Cube cubes[6];
+    for(int i =0; i <5; i++)
+    {
+        cubes[i].transform.Position = glm::vec3 ((float)(rand() % 30) + 1.0f,(float)(rand() % 50) + 40.0f,(float)(rand() % 30) + 1.0f);
+
+        fallLights[i].Color = glm::vec3(0.8f, 0.7f, 0.0f);
+        fallLights[i].Position = cubes[i].transform.Position;
+        fallLights[i].Ambient = glm::vec3(0.1f);
+        fallLights[i].Diffuse = glm::vec3(0.25f);
+        fallLights[i].Specular = glm::vec3(0.55f);
+        fallLights[i].Constant = 1.0f;
+        fallLights[i].Linear = 0.022f;
+        fallLights[i].Quadratic = 0.0019;
+
+
+        world.addPointLight(fallLights[i]);
+        world.addGameObject(cubes[i]);
+
+        environment.AddObject(&cubes[i],(float)(rand() % 15) + 5.0f);
+    }
+
+
     //KhEngine::PlayerController player(goblin, -camera.Forward);
     //player.mask = glm::vec3(1.0f,0.0f,-1.0f);
 
@@ -199,7 +227,7 @@ int main(int argc, char** argv)
         } // -- while event in queue
 
         // Clear the colorbuffer
-        //glClearColor(0.4f, 0.4f, 0.7f, 1.0f);
+
         glClearColor(0.04f, 0.04f, 0.07f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -214,7 +242,7 @@ int main(int argc, char** argv)
         pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
 
         sLight.Position.x = 10*sin(currentFrame * 2.0f);
-        sLight.Position.y = sin(currentFrame * 0.7f);
+        sLight.Position.y = sin(currentFrame * 0.7f) + 5.0f;
         sLight.Position.z = 5*sin(currentFrame * 1.3f);
         sCube.transform.Position = sLight.Position;
 
