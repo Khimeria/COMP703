@@ -24,7 +24,7 @@ namespace KhEngine
         int mouseX,
             mouseY;
 
-        bool follow;
+        bool follow = false;
         IInputController* followController;
 
         void BindTo(KhEngine::IInputController& inputController, glm::vec3 offset)
