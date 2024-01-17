@@ -18,8 +18,8 @@ namespace KhEngine
     public:
         PlayerController(ModelGameObject& mgo, glm::vec3 objForward);
 
-        void tick(float deltaTime) override;
-        void onMouseEvent(glm::vec3 rotation) override;
+        void afterTick() override;
+        void onMouseEvent() override;
         glm::mat4 getViewMat4() override;
         void setPosition(glm::vec3 pos) override;
         glm::vec3 getPosition() override;

@@ -30,8 +30,8 @@ namespace KhEngine
         return model;
     }
 
-    void PlayerController::onMouseEvent(glm::vec3 rotation){
-        IInputController::onMouseEvent(rotation);
+    void PlayerController::onMouseEvent(){
+        IInputController::onMouseEvent();
 
         //fix forward according to up
         Right = normalize(Right - dot(Right, up) * up);
@@ -40,6 +40,7 @@ namespace KhEngine
 
     void PlayerController::setPosition(glm::vec3 pos)
     {
+        IInputController::setPosition(pos);
         mgo->transform.Position = pos;
     }
 
@@ -48,13 +49,9 @@ namespace KhEngine
         return mgo->transform.Position;
     }
 
-    void PlayerController::tick(float deltaTime)
-    {
-        IInputController::tick(deltaTime);
-
+    void PlayerController::afterTick() {
         auto model = getViewMat4();
         model = glm::scale(model, mgo->originTransform.Scale);
         mgo->setModelView(model);
     }
-
 }

@@ -84,7 +84,6 @@ namespace KhEngine
         GoblinGameObject(Shader& shader): ModelGameObject("resources/models/Resault/LitleGoblen.obj", shader)
         {
             originTransform.Scale = glm::vec3(10.0f);
-            //originTransform.Rotation.y = 180.0f;
         }
     };
 

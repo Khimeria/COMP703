@@ -15,50 +15,43 @@ namespace KhEngine
                   Up = glm::vec3(0.0f, 1.0f, 0.0f),
                   Forward = glm::vec3(0.0f, 0.0f, -1.0f);
         const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 direction,
-                  offset,
+        glm::vec3 direction = glm::vec3(0.0f, 0.0f, -1.0f),
+                  offset = glm::vec3(0.0f, 0.0f, 0.0f),
                   mask = glm::vec3(1.0f,1.0f,1.0f);
         float speed = 4.0f,
               mouseSensitivity = 0.05f,
               yaw = glm::radians(-90.0f),
               pitch = glm::radians(0.0f);
 
-        int mouseX,
-            mouseY;
-
-        bool follow = false;
+        bool IsBinded = false;
 
         IInputController* followController;
 
-        void BindTo(KhEngine::IInputController& inputController, glm::vec3 offset)
+        void BindTo(KhEngine::IInputController& inputController)
         {
-            follow = true;
+            IsBinded = true;
             followController = &inputController;
-            this->offset = offset;
+            this->offset = inputController.Position - Position;
         };
 
         void Unbind()
         {
-            follow = false;
+            IsBinded = false;
             followController = nullptr;
             this->offset = glm::vec3(0.0f);
         };
 
-        virtual void tick(float deltaTime)
+        void tick(float deltaTime)
         {
-            if(follow)
+            if(IsBinded)
             {
-                auto pos = mask * followController->getPosition();
-                setPosition(pos-offset);
                 return;
             }
 
             auto movementSpeed = speed * deltaTime;
 
-            SDL_GetRelativeMouseState(&mouseX, &mouseY);
-
-            yaw += (float)mouseX * glm::radians(mouseSensitivity);
-            pitch -= (float)mouseY * glm::radians(mouseSensitivity);
+            yaw += (float)*mouseX * glm::radians(mouseSensitivity);
+            pitch -= (float)*mouseY * glm::radians(mouseSensitivity);
 
             auto r89 = glm::radians(89.0f);
 
@@ -67,18 +60,14 @@ namespace KhEngine
             if (pitch < -r89)
                 pitch = -r89;
 
-            glm::vec3 rotation;
-            rotation.x = cos(yaw) * cos(pitch);
-            rotation.y = sin(pitch);
-            rotation.z = sin(yaw) * cos(pitch);
+            direction.x = cos(yaw) * cos(pitch);
+            direction.y = sin(pitch);
+            direction.z = sin(yaw) * cos(pitch);
 
-            std::cout<<"pitch "<< pitch<<std::endl;
-            std::cout<<"rotation "<<rotation.x<<" "<<rotation.y<<" "<<rotation.z<<std::endl;
+            Forward = glm::normalize(direction);
+            Right = glm::normalize(glm::cross(up, Forward));
 
-
-            onMouseEvent(rotation);
-
-            std::cout<<"forward "<<Forward.x<<" "<<Forward.y<<" "<<Forward.z<<std::endl;
+            onMouseEvent();
 
             const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
             if (keyboardState[buttonForward])
@@ -89,28 +78,32 @@ namespace KhEngine
                 setPosition(getPosition() + mask * Right * movementSpeed);
             if (keyboardState[buttonLeft])
                 setPosition(getPosition() -(mask * Right * movementSpeed));
+
+            afterTick();
         };
 
-        virtual void onMouseEvent(glm::vec3 rotation){
-            direction = rotation;
-            Forward = glm::normalize(direction);
-            Right = glm::normalize(glm::cross(up, Forward));
+        virtual void afterTick(){
         }
 
         virtual glm::mat4 getViewMat4()
         {
-            if(follow)
+            if(IsBinded)
             {
-                auto mat4 = followController->getViewMat4();
-                mat4 = glm::translate(mat4, offset);
-                //mat4 = glm::inverse(mat4);
-                return mat4;
+                auto x = glm::dot(offset, followController->Right);
+                auto y = glm::dot(offset, followController->Up);
+                auto z = glm::dot(offset, -followController->Forward);
+                auto mat = glm::lookAt(followController->getPosition() - glm::vec3(x,y,z), followController->getPosition() + followController->Forward,up);
+                return mat;
             }
-            return glm::lookAt(getPosition(), getPosition() + Forward, Up);
+            else
+                return glm::lookAt(getPosition(), getPosition() + Forward, Up);
         }
 
         virtual void setPosition(glm::vec3 pos)
         {
+            if(IsBinded)
+                return;
+
             Position = pos;
         };
 
@@ -125,12 +118,23 @@ namespace KhEngine
         {
             this->mask = mask;
         };
+        void bindMouseInput(int &x, int &y)
+        {
+            mouseX = &x;
+            mouseY = &y;
+        };
     protected:
-        glm::vec3 Position;
+        glm::vec3 Position = glm::vec3(0.0f);
         int buttonForward = SDL_SCANCODE_W;
         int buttonBackward = SDL_SCANCODE_S;
         int buttonRight = SDL_SCANCODE_D;
         int buttonLeft = SDL_SCANCODE_A;
+        int *mouseX, *mouseY;
+
+        virtual void onMouseEvent(){
+        }
+
+    private:
     };
 }
 
