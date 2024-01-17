@@ -107,7 +107,11 @@ int main(int argc, char** argv)
 
     KhEngine::PhysicEnvironment environment;
     environment.AddForce(9.80665f, glm::vec3(0.0f,-1.0f,0.0f));
-    environment.AddForce(2.0f, glm::vec3(0.5f,0.0f,0.5f));
+    environment.AddForce(2.0f, glm::vec3(0.5f,0.0f,0.0f));
+    KhEngine::Force wind{2.0f, glm::vec3(0.5f,0.0f,0.5f)};
+    environment.AddForce(wind);
+    environment.RemoveForce(wind);
+    environment.RemoveForce(1);
 
     KhEngine::SpotLight fallLights[6];
     KhEngine::Cube cubes[6];

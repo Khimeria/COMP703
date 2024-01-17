@@ -53,7 +53,7 @@ namespace KhEngine
         }
     };
 
-    class PhysicEnvironment
+    class PhysicEnvironment: public IDestroyable
     {
     public:
         std::vector<Force> environmentForces;
@@ -67,9 +67,51 @@ namespace KhEngine
             environmentForces.push_back(force);
         }
 
+        void AddForce(Force& force) {
+            environmentForces.push_back(force);
+        }
+
+        void RemoveForce(Force& force) {
+            for(int i =0;i<environmentForces.size();i++)
+            {
+                Force elem = environmentForces[i];
+                if( elem.accumulation == force.accumulation &&
+                elem.direction == force.direction)
+                {
+                    RemoveForce( i);
+                    return;
+                }
+            }
+        }
+
+        void RemoveForce(int pos) {
+            remove(environmentForces, pos);
+        }
+
+        template <typename T>
+        void remove(std::vector<T>& vec, std::size_t pos)
+        {
+            typename std::vector<T>::iterator it = vec.begin();
+            std::advance(it, pos);
+            vec.erase(it);
+        }
+
         void AddObject(GameObject* go, float mass)
         {
             objects.emplace_back(go,mass);
+        }
+
+        void RemoveObject(GameObject* go, float mass)
+        {
+            for(int i = 0; i< objects.size(); i++)
+            {
+                if(objects[i].Object == go &&
+                objects[i].mass == mass)
+                {
+                    remove(objects,i);
+                    return;
+                }
+            }
         }
 
         void calcResultantForce(PhysicObject& obj)
@@ -112,6 +154,12 @@ namespace KhEngine
                 auto r = objects[i].velocity * deltaTime * objects[i].force.direction;
                 objects[i].Object->transform.Position = max(objects[i].Object->transform.Position + r, glm::vec3(0.0f));
             }
+        }
+
+        void Destroy() override
+        {
+            objects.clear();
+            environmentForces.clear();
         }
 
     private:
