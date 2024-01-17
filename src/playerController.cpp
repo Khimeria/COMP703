@@ -10,7 +10,7 @@ namespace KhEngine
     PlayerController::PlayerController(ModelGameObject& mgo, glm::vec3 objForward)
     {
         this->mgo = &mgo;
-        this->direction = objForward;
+        originForward = direction = objForward;
 
         Right = glm::normalize(glm::cross(up, direction));
         Up = glm::normalize(glm::cross(direction, Right));
@@ -19,7 +19,23 @@ namespace KhEngine
 
     glm::mat4 PlayerController::getViewMat4()
     {
-        return glm::lookAt(mgo->transform.Position, mgo->transform.Position + mask * Forward, Up);
+        auto pi = glm::radians(180.0f);
+        auto dot = glm::dot(originForward, Forward);
+        auto det = glm::dot(Up, glm::cross(originForward, Forward));
+        auto alpha = atan2(-det, -dot) + pi;
+
+        auto model = glm::mat4 (1.0f);
+        model = glm::translate(model, glm::vec3(mgo->transform.Position));
+        model = glm::rotate(model, alpha, glm::vec3(0.0f, 1.0f, 0.0f)); // then rotate
+        return model;
+    }
+
+    void PlayerController::onMouseEvent(glm::vec3 rotation){
+        IInputController::onMouseEvent(rotation);
+
+        //fix forward according to up
+        Right = normalize(Right - dot(Right, up) * up);
+        Forward = cross(Right, up);
     }
 
     void PlayerController::setPosition(glm::vec3 pos)

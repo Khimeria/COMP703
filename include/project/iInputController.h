@@ -5,6 +5,8 @@
 #ifndef M_BOSSFIGHT_IINPUTCONTROLLER_H
 #define M_BOSSFIGHT_IINPUTCONTROLLER_H
 
+#include <iostream>
+
 namespace KhEngine
 {
     class IInputController {
@@ -22,9 +24,12 @@ namespace KhEngine
               pitch = glm::radians(0.0f);
 
         int mouseX,
-            mouseY;
+            mouseY,
+            lastMouseX,
+            lastMouseY;
 
-        bool follow = false;
+        bool follow = false,
+             mouseInitialized = false;
         IInputController* followController;
 
         void BindTo(KhEngine::IInputController& inputController, glm::vec3 offset)
@@ -54,31 +59,55 @@ namespace KhEngine
 
             SDL_GetRelativeMouseState(&mouseX, &mouseY);
 
-            yaw += (float)mouseX * glm::radians(mouseSensitivity);
-            pitch -= (float)mouseY * glm::radians(mouseSensitivity);
+            if(!mouseInitialized)
+            {
+                mouseInitialized = true;
+                lastMouseX = 0;
+                lastMouseY = 0;
+            }
 
-            if (pitch > 89.0f)
-                pitch = 89.0f;
-            if (pitch < -89.0f)
-                pitch = -89.0f;
+            auto mouseOffsetX = mouseX - lastMouseX;
+            auto mouseOffsetY = mouseY - lastMouseY;
 
-            direction.x = cos(yaw) * cos(pitch);
-            direction.y = sin(pitch);
-            direction.z = sin(yaw) * cos(pitch);
-            Forward = glm::normalize(direction);
+            yaw += (float)mouseOffsetX * glm::radians(mouseSensitivity);
+            pitch -= (float)mouseOffsetY * glm::radians(mouseSensitivity);
 
-            Right = glm::normalize(glm::cross(up, Forward));
+            auto r89 = glm::radians(89.0f);
+
+            if (pitch > r89)
+                pitch = r89;
+            if (pitch < -r89)
+                pitch = -r89;
+
+            glm::vec3 rotation;
+            rotation.x = cos(yaw) * cos(pitch);
+            rotation.y = sin(pitch);
+            rotation.z = sin(yaw) * cos(pitch);
+
+            std::cout<<"pitch "<< pitch<<std::endl;
+            std::cout<<"rotation "<<rotation.x<<" "<<rotation.y<<" "<<rotation.z<<std::endl;
+
+
+            onMouseEvent(rotation);
+
+            std::cout<<"forward "<<Forward.x<<" "<<Forward.y<<" "<<Forward.z<<std::endl;
 
             const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
-            if (keyboardState[SDL_SCANCODE_W])
+            if (keyboardState[buttonForward])
                 setPosition(getPosition() + mask * Forward * movementSpeed);
-            if (keyboardState[SDL_SCANCODE_S])
+            if (keyboardState[buttonBackward])
                 setPosition(getPosition() -(mask * Forward * movementSpeed));
-            if (keyboardState[SDL_SCANCODE_A])
+            if (keyboardState[buttonRight])
                 setPosition(getPosition() + mask * Right * movementSpeed);
-            if (keyboardState[SDL_SCANCODE_D])
+            if (keyboardState[buttonLeft])
                 setPosition(getPosition() -(mask * Right * movementSpeed));
         };
+
+        virtual void onMouseEvent(glm::vec3 rotation){
+            direction = rotation;
+            Forward = glm::normalize(direction);
+            Right = glm::normalize(glm::cross(up, Forward));
+        }
 
         virtual glm::mat4 getViewMat4()
         {
@@ -89,13 +118,14 @@ namespace KhEngine
                 //mat4 = glm::inverse(mat4);
                 return mat4;
             }
-            return glm::lookAt(Position, Position + Forward, Up);
+            return glm::lookAt(getPosition(), getPosition() + Forward, Up);
         }
 
         virtual void setPosition(glm::vec3 pos)
         {
             Position = pos;
         };
+
         virtual glm::vec3 getPosition(){
             return Position;
         };
@@ -109,6 +139,10 @@ namespace KhEngine
         };
     protected:
         glm::vec3 Position;
+        int buttonForward = SDL_SCANCODE_W;
+        int buttonBackward = SDL_SCANCODE_S;
+        int buttonRight = SDL_SCANCODE_D;
+        int buttonLeft = SDL_SCANCODE_A;
     };
 }
 

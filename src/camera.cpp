@@ -15,5 +15,10 @@ namespace KhEngine
 
         Right = glm::normalize(glm::cross(up, direction));
         Up = glm::normalize(glm::cross(direction, Right));
+
+        buttonForward = SDL_SCANCODE_UP;
+        buttonBackward = SDL_SCANCODE_DOWN;
+        buttonRight = SDL_SCANCODE_RIGHT;
+        buttonLeft = SDL_SCANCODE_LEFT;
     }
 }

@@ -93,12 +93,12 @@ int main(int argc, char** argv)
     world.addGameObject(terrain);
     KhEngine::GoblinGameObject goblin(*ourShader);
     world.addGameObject(goblin);
-    KhEngine::PlayerController player(goblin, world.Forward);
+    KhEngine::PlayerController player(goblin, -world.Forward);
 
     //KhEngine::PlayerController player(goblin, -camera.Forward);
     //player.mask = glm::vec3(1.0f,0.0f,-1.0f);
 
-    camera.setPosition(glm::vec3(0.0f, 20.0f, 20.0f));
+    camera.setPosition(glm::vec3(0.0f, 20.0f, 60.0f));
 
     //camera.BindTo(player,  );
 
@@ -208,10 +208,6 @@ int main(int argc, char** argv)
 
         //goblin.setModelView(model);
 
-
-
-        std::cout<<goblin.transform.Position.x<<", "<<goblin.transform.Position.y<<", "<<goblin.transform.Position.z<<std::endl;
-
         pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
 
         sLight.Position.x = 10*sin(currentFrame * 2.0f);
@@ -237,7 +233,7 @@ int main(int argc, char** argv)
 
 void KhEngine::setCursorMode(SDL_Window* window, int state) {
     SDL_ShowCursor(state);
-    SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+    //SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
     SDL_SetRelativeMouseMode((SDL_bool)(1-state));
 }
 

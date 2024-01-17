@@ -17,6 +17,8 @@ namespace KhEngine
         glm::vec3 Position = glm::vec3(0.0f);
         glm::vec3 Scale = glm::vec3(1.0f);
         glm::vec3 Rotation = glm::vec3(0.0f);
+        float width;
+        float height;
     };
 
     class GameObject: public IDestroyable
