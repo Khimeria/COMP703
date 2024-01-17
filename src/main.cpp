@@ -93,6 +93,7 @@ int main(int argc, char** argv)
     world.addGameObject(terrain);
     KhEngine::GoblinGameObject goblin(*ourShader);
     world.addGameObject(goblin);
+    KhEngine::PlayerController player(goblin, world.Forward);
 
     //KhEngine::PlayerController player(goblin, -camera.Forward);
     //player.mask = glm::vec3(1.0f,0.0f,-1.0f);
@@ -189,6 +190,8 @@ int main(int argc, char** argv)
         float currentFrame = (float)SDL_GetTicks()/1000;
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        player.tick(deltaTime);
 
         auto prevCameraPos = camera.getPosition();
         camera.tick(deltaTime);
