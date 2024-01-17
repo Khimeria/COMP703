@@ -7,7 +7,6 @@
 
 namespace KhEngine
 {
-
     Camera::Camera(glm::vec3 position, glm::vec3 target)
     {
         this->Position = position;
@@ -20,5 +19,8 @@ namespace KhEngine
         buttonBackward = SDL_SCANCODE_DOWN;
         buttonRight = SDL_SCANCODE_RIGHT;
         buttonLeft = SDL_SCANCODE_LEFT;
+    }
+
+    void Camera::Destroy(){
     }
 }

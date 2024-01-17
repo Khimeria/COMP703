@@ -34,25 +34,16 @@ namespace KhEngine
         void addDirectLight(DirectLight& light)
         {
             lightManager.addDirectLightSource(light);
-            //addLightSource(light);
         }
 
         void addPointLight(PointLight& light)
         {
             lightManager.addPointLightSource(light);
-            //addLightSource(light);
         }
 
         void addSpotLight(SpotLight& light)
         {
             lightManager.addSpotLightSource(light);
-            //addLightSource(light);
-        }
-
-        void addLightSource(BaseLightSource& light)
-        {
-
-            lights.push_back(&light);
         }
 
         void addShader(Shader* shader)
@@ -73,6 +64,7 @@ namespace KhEngine
             gameObjects.clear();
             lights.clear();
             shaders.clear();
+            lightManager.Destroy();
         }
 
         void tick(float deltaTime)

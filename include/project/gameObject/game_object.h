@@ -41,6 +41,15 @@ namespace KhEngine
             Draw(*shader);
         }
 
+        glm::mat4 applyOriginModelMatrix(glm::mat4 model) const
+        {
+            model = glm::translate(model, originTransform.Position); // translate it down so it's at the center of the scene
+            model = glm::rotate(model,glm::radians(originTransform.Rotation.x), glm::vec3(1.0f,0.0f,0.0f));
+            model = glm::rotate(model,glm::radians(originTransform.Rotation.y), glm::vec3(0.0f,1.0f,0.0f));
+            model = glm::rotate(model,glm::radians(originTransform.Rotation.z), glm::vec3(0.0f,0.0f,1.0f));
+            model = glm::scale(model, originTransform.Scale);
+        }
+
         glm::mat4 getModelMatrix(glm::mat4 model) const
         {
             //glm::mat4 model = glm::mat4(1.0f);

@@ -9,15 +9,16 @@
 #include <gtc/type_ptr.hpp>
 #include <SDL_events.h>
 #include "iInputController.h"
+#include "iDestroyable.h"
 
 namespace KhEngine
 {
-    class Camera: public IInputController
+    class Camera: public IInputController, public IDestroyable
     {
     public:
         Camera(glm::vec3 position, glm::vec3 target);
+        void Destroy() override;
     private:
-        //camera
     };
 }
 #endif //M_BOSSFIGHT_CAMERA_H

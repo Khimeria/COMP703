@@ -24,12 +24,10 @@ namespace KhEngine
               pitch = glm::radians(0.0f);
 
         int mouseX,
-            mouseY,
-            lastMouseX,
-            lastMouseY;
+            mouseY;
 
-        bool follow = false,
-             mouseInitialized = false;
+        bool follow = false;
+
         IInputController* followController;
 
         void BindTo(KhEngine::IInputController& inputController, glm::vec3 offset)
@@ -59,18 +57,8 @@ namespace KhEngine
 
             SDL_GetRelativeMouseState(&mouseX, &mouseY);
 
-            if(!mouseInitialized)
-            {
-                mouseInitialized = true;
-                lastMouseX = 0;
-                lastMouseY = 0;
-            }
-
-            auto mouseOffsetX = mouseX - lastMouseX;
-            auto mouseOffsetY = mouseY - lastMouseY;
-
-            yaw += (float)mouseOffsetX * glm::radians(mouseSensitivity);
-            pitch -= (float)mouseOffsetY * glm::radians(mouseSensitivity);
+            yaw += (float)mouseX * glm::radians(mouseSensitivity);
+            pitch -= (float)mouseY * glm::radians(mouseSensitivity);
 
             auto r89 = glm::radians(89.0f);
 
