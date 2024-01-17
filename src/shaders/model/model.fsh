@@ -35,7 +35,7 @@ struct PointLight {
         vec3 diffuse;
         vec3 specular;
 };
-#define NR_POINT_LIGHTS 6
+#define NR_POINT_LIGHTS 1
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 
 struct SpotLight {
@@ -55,7 +55,7 @@ struct SpotLight {
 
         float outerCutOff;
 };
-#define NR_SPOT_LIGHTS 1
+#define NR_SPOT_LIGHTS 6
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform vec3 viewPos;
 

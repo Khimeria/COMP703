@@ -107,24 +107,28 @@ int main(int argc, char** argv)
 
     KhEngine::PhysicEnvironment environment;
     environment.AddForce(9.80665f, glm::vec3(0.0f,-1.0f,0.0f));
+    environment.AddForce(2.0f, glm::vec3(0.5f,0.0f,0.5f));
 
-    KhEngine::PointLight fallLights[6];
+    KhEngine::SpotLight fallLights[6];
     KhEngine::Cube cubes[6];
     for(int i =0; i <5; i++)
     {
         cubes[i].transform.Position = glm::vec3 ((float)(rand() % 30) + 1.0f,(float)(rand() % 50) + 40.0f,(float)(rand() % 30) + 1.0f);
 
-        fallLights[i].Color = glm::vec3(0.8f, 0.7f, 0.0f);
-        fallLights[i].Position = cubes[i].transform.Position;
-        fallLights[i].Ambient = glm::vec3(0.1f);
-        fallLights[i].Diffuse = glm::vec3(0.25f);
-        fallLights[i].Specular = glm::vec3(0.55f);
+        fallLights[i].Color = glm::vec3(0.5f, 0.5f, 1.0f);
+        fallLights[i].Position = glm::vec3(0.0f, 1.0f, -1.0f);
+        fallLights[i].Direction = glm::vec3(0.0f, -1.0f, 0.0f);
+        fallLights[i].Ambient = glm::vec3(0.2f);
+        fallLights[i].Diffuse = glm::vec3(0.5f);
+        fallLights[i].Specular = glm::vec3(0.75f);
         fallLights[i].Constant = 1.0f;
         fallLights[i].Linear = 0.022f;
         fallLights[i].Quadratic = 0.0019;
+        fallLights[i].CutOff = cos(glm::radians(12.5f));
+        fallLights[i].OuterCutOff = cos(glm::radians(17.5f));
 
 
-        world.addPointLight(fallLights[i]);
+        world.addSpotLight(fallLights[i]);
         world.addGameObject(cubes[i]);
 
         environment.AddObject(&cubes[i],(float)(rand() % 15) + 5.0f);
@@ -239,7 +243,14 @@ int main(int argc, char** argv)
         player.tick(deltaTime);
         camera.tick(deltaTime);
 
-        pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
+        environment.tick(deltaTime);
+
+        for(int i =0; i <4; i++)
+        {
+            fallLights[i].Position = cubes[i].transform.Position;
+        }
+
+        pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 10.0f, 20*cos(currentFrame));
 
         sLight.Position.x = 10*sin(currentFrame * 2.0f);
         sLight.Position.y = sin(currentFrame * 0.7f) + 5.0f;
@@ -265,7 +276,7 @@ int main(int argc, char** argv)
 
 void KhEngine::setCursorMode(SDL_Window* window, int state) {
     SDL_ShowCursor(state);
-    //SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+    SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
     SDL_SetRelativeMouseMode((SDL_bool)(1-state));
 }
 
