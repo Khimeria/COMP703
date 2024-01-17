@@ -6,7 +6,7 @@
 #define M_BOSSFIGHT_MODEL_GO_H
 
 #include "game_object.h"
-#include "model.h"
+#include "project/model.h"
 
 namespace KhEngine
 {
@@ -38,12 +38,25 @@ namespace KhEngine
         {
         }
 
+        void setModelView(glm::mat4 value){
+            customModel = true;
+            modelMtx = value;
+        }
+
         void Draw(Shader& shader) override
         {
-            glm::mat4 modelMtx = getModelMatrix();
-
             shader.use();
-            shader.setMat4("model", modelMtx);
+
+            if(customModel)
+            {
+                shader.setMat4("model", modelMtx);
+                customModel = false;
+            }
+            else
+            {
+                auto modelMtx = getModelMatrix(glm::mat4(1.0f));
+                shader.setMat4("model", modelMtx);
+            }
 
             glm::mat3 normModel = transpose(inverse(modelMtx));
             shader.setMat3("normalModel", normModel);
@@ -57,8 +70,30 @@ namespace KhEngine
         {
         model.Destroy();
         }
-    private:
+
+    protected:
         Model model;
+    private:
+
+        bool customModel;
+    };
+
+    class GoblinGameObject: public ModelGameObject
+    {
+    public:
+        GoblinGameObject(Shader& shader): ModelGameObject("resources/models/Resault/LitleGoblen.obj", shader)
+        {
+            originTransform.Scale = glm::vec3(10.0f);
+        }
+    };
+
+    class TerrainGameObject: public ModelGameObject
+    {
+    public:
+        TerrainGameObject(Shader& shader): ModelGameObject("resources/models/Scene/Scene.obj", shader)
+        {
+            originTransform.Position = glm::vec3(0.0f,29.0f,0.0f);
+        }
     };
 }
 #endif //M_BOSSFIGHT_MODEL_GO_H

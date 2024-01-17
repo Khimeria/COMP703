@@ -34,15 +34,16 @@ add_executable(project
 		include/project/main.hpp
 		include/project/light.h
 		src/light.cpp
-		include/project/game_object.h
-		include/project/cube_go.h
-		include/project/buffer.h
-		include/project/shader_ex.h
+		include/project/gameObject/game_object.h
+        include/project/gameObject/primitive_go.h
+		include/project/renderManager.h
 		include/project/world.h
-		include/project/IDestroyable.h
-        src/buffer.cpp
-		include/project/terrain.h
-		include/project/model_go.h
+		src/renderManager.cpp
+        include/project/gameObject/model_go.h
+		src/playerController.cpp
+		include/project/playerController.h
+		include/project/iInputController.h
+		include/project/iDestroyable.h
 )
 add_subdirectory( src )
 

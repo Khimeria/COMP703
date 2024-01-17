@@ -2,13 +2,13 @@
 // Created by Marharyta Haichuk on 13/01/2024.
 //
 
-#ifndef M_BOSSFIGHT_CUBE_GO_H
-#define M_BOSSFIGHT_CUBE_GO_H
+#ifndef M_BOSSFIGHT_PRIMITIVE_GO_H
+#define M_BOSSFIGHT_PRIMITIVE_GO_H
 
 #include "game_object.h"
-#include "shader.h"
+#include "project/shader.h"
 #include <glew.h>
-#include "project/buffer.h"
+#include "project/renderManager.h"
 
 namespace KhEngine
 {
@@ -30,10 +30,10 @@ namespace KhEngine
 
         void Draw(Shader& shader) override
         {
-            glm::mat4 model = getModelMatrix();
+            glm::mat4 model = getModelMatrix(modelMtx);
             shader.use();
             shader.setMat4("model", model);
-            shader.setVec3("lightColor", Color);
+            shader.setVec3("lightColor", color);
 
             glBindVertexArray(VAO);
             glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -119,4 +119,4 @@ namespace KhEngine
 
     };
 }
-#endif //M_BOSSFIGHT_CUBE_GO_H
+#endif //M_BOSSFIGHT_PRIMITIVE_GO_H

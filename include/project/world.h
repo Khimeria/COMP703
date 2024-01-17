@@ -13,6 +13,11 @@ namespace KhEngine
     {
     public:
         float fov;
+        const glm::vec3 Forward = glm::vec3 (0.0f,0.0f,-1.0f);
+        const glm::vec3 Backward = glm::vec3 (0.0f,0.0f,1.0f);
+        const glm::vec3 Right = glm::vec3 (1.0f,0.0f,0.0f);
+        const glm::vec3 Left = glm::vec3 (-1.0f,0.0f,0.0f);
+
         World(Camera& camera, float screenWidth, float screenHeight, float fov): camera(camera)
         {
             this->screenWidth = screenWidth;
@@ -29,25 +34,16 @@ namespace KhEngine
         void addDirectLight(DirectLight& light)
         {
             lightManager.addDirectLightSource(light);
-            //addLightSource(light);
         }
 
         void addPointLight(PointLight& light)
         {
             lightManager.addPointLightSource(light);
-            //addLightSource(light);
         }
 
         void addSpotLight(SpotLight& light)
         {
             lightManager.addSpotLightSource(light);
-            //addLightSource(light);
-        }
-
-        void addLightSource(BaseLightSource& light)
-        {
-
-            lights.push_back(&light);
         }
 
         void addShader(Shader* shader)
@@ -68,6 +64,7 @@ namespace KhEngine
             gameObjects.clear();
             lights.clear();
             shaders.clear();
+            lightManager.Destroy();
         }
 
         void tick(float deltaTime)
@@ -77,8 +74,8 @@ namespace KhEngine
                 auto shader = *pair.second;
 
                 shader.use();
-                KhEngine::ShaderEx::SetViewMat4(shader, camera.getViewMat4());
-                KhEngine::ShaderEx::SetProjectionMat4(shader, getProjection());
+                shader.setMat4("view", camera.getViewMat4());
+                shader.setMat4("projection", getProjection());
                 shader.setVec3("viewPos", camera.getPosition());
 
                 lightManager.Draw(shader);

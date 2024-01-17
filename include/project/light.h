@@ -9,6 +9,7 @@
 #include <glew.h>
 #include <SDL.h>
 #include "shader.h"
+#include "iDestroyable.h"
 
 namespace KhEngine
 {
@@ -44,7 +45,7 @@ namespace KhEngine
         float OuterCutOff;
     };
 
-    class LightSourceManager
+    class LightSourceManager: IDestroyable
     {
     public:
         LightSourceManager();
@@ -68,6 +69,8 @@ namespace KhEngine
 
         void addSpotLightSource(SpotLight &light);
 
+        void Destroy() override;
+
     private:
         std::vector<PointLight*> pLights;
         std::vector<SpotLight*> sLights;
@@ -78,7 +81,6 @@ namespace KhEngine
         void setPointLightToShader(Shader &shader, std::string &name, PointLight* light);
 
         void setBaseLightToShader(Shader &shader, std::string &name, BaseLightSource* light);
-
     };
 }
 

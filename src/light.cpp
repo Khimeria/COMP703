@@ -149,4 +149,11 @@ namespace KhEngine
         light.ID = sLights.size();
         sLights.push_back(&light);
     }
+
+    void LightSourceManager::Destroy()
+    {
+        directLight = nullptr;
+        sLights.clear();
+        pLights.clear();
+    }
 }

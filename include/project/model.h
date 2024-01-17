@@ -10,7 +10,7 @@
 #include <assimp/scene.h>
 #include <assimp/mesh.h>
 #include <assimp/material.h>
-#include <project/game_object.h>
+#include "project/gameObject/game_object.h"
 
 namespace KhEngine
 {

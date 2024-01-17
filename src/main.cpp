@@ -1,11 +1,10 @@
 #include <project/main.hpp>
-#include "project/model.h"
 #include "project/light.h"
-#include "project/cube_go.h"
-#include "project/shader_ex.h"
-#include "project/buffer.h"
+#include <project/gameObject/model_go.h>
+#include <project/gameObject/primitive_go.h>
+#include "project/renderManager.h"
 #include "project/world.h"
-#include "project/terrain.h"
+#include "project/playerController.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -66,10 +65,12 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, WIDTH, HEIGHT);
     glEnable(GL_DEPTH_TEST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 20);
+    //glEnable(GL_FRAMEBUFFER_SRGB);
 
     //camera creation
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 3.0f);
     auto camera = KhEngine::Camera(cameraPos, cameraTarget);
 
     //create world
@@ -90,8 +91,25 @@ int main(int argc, char** argv)
     world.addGameObject(sCube);
     KhEngine::TerrainGameObject terrain(*ourShader);
     world.addGameObject(terrain);
-    KhEngine::ModelGameObject goblin("models/Resault/LitleGoblen.obj", *ourShader);
+    KhEngine::GoblinGameObject goblin(*ourShader);
     world.addGameObject(goblin);
+
+    KhEngine::PlayerController player(goblin, -world.Forward);
+
+    //setup player and camera
+    player.setSpeed(50.0f);
+    camera.setSpeed(50.0f);
+
+    int mouseX, mouseY;
+    player.bindMouseInput(mouseX, mouseY);
+    camera.bindMouseInput(mouseX, mouseY);
+    //KhEngine::PlayerController player(goblin, -camera.Forward);
+    //player.mask = glm::vec3(1.0f,0.0f,-1.0f);
+
+    camera.setPosition(glm::vec3(0.0f, 20.0f, 60.0f));
+
+    camera.BindTo(player);
+    //camera.Unbind();
 
     //add Lights
     KhEngine::DirectLight dLight{};
@@ -141,7 +159,7 @@ int main(int argc, char** argv)
     //game loop
     while(EXIT_FAILURE)
     {
-
+        SDL_GetRelativeMouseState(&mouseX, &mouseY);
         //input loop
         while( SDL_PollEvent( &event ))
         {
@@ -155,6 +173,14 @@ int main(int argc, char** argv)
                         case SDLK_ESCAPE:
                             cursorState = 1-cursorState;
                             KhEngine::setCursorMode(window, cursorState);
+                            break;
+                        case SDLK_SPACE:
+                            if(camera.IsBinded)
+                            {
+                                camera.Unbind();
+                            }
+                            else
+                                camera.BindTo(player);
                             break;
                     }
                     break;
@@ -182,15 +208,17 @@ int main(int argc, char** argv)
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        player.tick(deltaTime);
         camera.tick(deltaTime);
 
-        pCube.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
+        pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
 
         sLight.Position.x = 10*sin(currentFrame * 2.0f);
         sLight.Position.y = sin(currentFrame * 0.7f);
         sLight.Position.z = 5*sin(currentFrame * 1.3f);
-        sCube.Position = sLight.Position;
+        sCube.transform.Position = sLight.Position;
 
+        //draw
         world.tick(deltaTime);
 
         SDL_GL_SwapWindow(window);
@@ -209,7 +237,7 @@ int main(int argc, char** argv)
 
 void KhEngine::setCursorMode(SDL_Window* window, int state) {
     SDL_ShowCursor(state);
-    SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+    //SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
     SDL_SetRelativeMouseMode((SDL_bool)(1-state));
 }
 
