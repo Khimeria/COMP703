@@ -4,7 +4,7 @@
 
 #ifndef M_BOSSFIGHT_CAMERA_H
 #define M_BOSSFIGHT_CAMERA_H
-#include <glm.hpp>
+
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <SDL_events.h>

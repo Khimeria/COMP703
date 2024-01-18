@@ -36,9 +36,10 @@ namespace KhEngine
         }
 
         void addForce(float accumulation, glm::vec3 direction){
+
             force.accumulation = accumulation;
             force.direction = direction;
-
+            std::cout<<"Add force "<<force.accumulation<<std::endl;
 //            auto exist = mass * force.accumulation * force.direction;
 //            auto newOne = mass * accumulation * direction;
 //            auto resultForce = exist + newOne;
@@ -96,9 +97,11 @@ namespace KhEngine
             vec.erase(it);
         }
 
-        void AddObject(GameObject* go, float mass)
+        PhysicObject* AddObject(GameObject* go, float mass)
         {
             objects.emplace_back(go,mass);
+            auto item = &objects[objects.size()-1];
+            return item;
         }
 
         void RemoveObject(GameObject* go, float mass)
@@ -135,7 +138,7 @@ namespace KhEngine
             {
                 float velocityTime = time;
 
-                if(objects[i].Object->transform.Position.y <= 0.0f)
+                if(objects[i].Object->transform.Position.y <= -1.0f)
                 {
                     //hit plane
                     float accumulation = 0.65f * objects[i].force.accumulation;
@@ -153,6 +156,9 @@ namespace KhEngine
 
                 auto r = objects[i].velocity * deltaTime * objects[i].force.direction;
                 objects[i].Object->transform.Position = max(objects[i].Object->transform.Position + r, glm::vec3(0.0f));
+                std::cout<<"First force "<<objects[0].force.accumulation<<std::endl;
+                std::cout<<"First r "<<std::to_string(r.y)<<std::endl;
+                std::cout<<"First "<<objects[0].Object->transform.Position.x<<" "<<objects[i].Object->transform.Position.y<<" "<<objects[i].Object->transform.Position.z<<std::endl;
             }
         }
 
@@ -160,6 +166,10 @@ namespace KhEngine
         {
             objects.clear();
             environmentForces.clear();
+        }
+
+        PhysicObject& getObject(int i) {
+            return objects.at(i);
         }
 
     private:

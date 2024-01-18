@@ -5,6 +5,7 @@
 #include "project/renderManager.h"
 #include "project/world.h"
 #include "project/physics/physic_manager.h"
+#include "project/playerController.h"
 
 //-----------------------------------
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -79,6 +80,7 @@ int main(int argc, char** argv)
 
     //create shader
     KhEngine::Shader* ourShader = KhEngine::RenderManager::GetShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
+    KhEngine::Shader* trallShader = KhEngine::RenderManager::GetShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
     //create models
     //KhEngine::Model ourModel("models/Scene/Scene.obj");
     //KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
@@ -93,7 +95,10 @@ int main(int argc, char** argv)
     KhEngine::TerrainGameObject terrain(*ourShader);
     world.addGameObject(terrain);
     KhEngine::GoblinGameObject goblin(*ourShader);
+    KhEngine::ModelGameObject trall("resources/models/Trall/GreenTrall.obj",*trallShader);
     world.addGameObject(goblin);
+    world.addGameObject(trall);
+    trall.transform.Scale = glm::vec3(10.0f);
 
     KhEngine::PlayerController player(goblin, -world.Forward);
 
@@ -112,6 +117,7 @@ int main(int argc, char** argv)
     environment.AddForce(wind);
     environment.RemoveForce(wind);
     environment.RemoveForce(1);
+    KhEngine::PhysicObject* physicObject = environment.AddObject(&goblin, 10);
 
     KhEngine::SpotLight fallLights[6];
     KhEngine::Cube cubes[6];
@@ -142,7 +148,7 @@ int main(int argc, char** argv)
     //KhEngine::PlayerController player(goblin, -camera.Forward);
     //player.mask = glm::vec3(1.0f,0.0f,-1.0f);
 
-    camera.setPosition(glm::vec3(0.0f, 20.0f, 60.0f));
+    camera.setPosition(glm::vec3(0.0f, 20.0f, 40.0f));
 
     camera.BindTo(player);
     //camera.Unbind();
@@ -210,13 +216,16 @@ int main(int argc, char** argv)
                             cursorState = 1-cursorState;
                             KhEngine::setCursorMode(window, cursorState);
                             break;
-                        case SDLK_SPACE:
+                        case SDLK_TAB:
                             if(camera.IsBinded)
                             {
                                 camera.Unbind();
                             }
                             else
                                 camera.BindTo(player);
+                            break;
+                        case SDLK_SPACE:
+                            environment.getObject(0).addForce(400,glm::vec3(0.0f,1.0f,0.0f));
                             break;
                     }
                     break;
@@ -326,7 +335,9 @@ void KhEngine::loadTexture(GLuint *textureID, std::string directory, std::string
         glGenerateMipmap(GL_TEXTURE_2D);
 
         //Get rid of old loaded surface
-        //SDL_FreeSurface( loadedSurface ); this version of sdl crash
+#ifdef NOT TARGET_OS_MAC
+        SDL_FreeSurface( loadedSurface );// this version of sdl crash
+#endif
     }
 
 }

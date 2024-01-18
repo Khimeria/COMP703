@@ -44,8 +44,6 @@ add_executable(project
 		include/project/playerController.h
 		include/project/iInputController.h
 		include/project/iDestroyable.h
-		"include/3rd Party/AABB/AABB.h"
-		"src/3rd Party/AABB/AABBTree.cpp"
 )
 add_subdirectory( src )
 

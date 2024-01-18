@@ -48,8 +48,6 @@ namespace KhEngine
                 return;
             }
 
-            auto movementSpeed = speed * deltaTime;
-
             yaw += (float)*mouseX * glm::radians(mouseSensitivity);
             pitch -= (float)*mouseY * glm::radians(mouseSensitivity);
 
@@ -69,6 +67,14 @@ namespace KhEngine
 
             onMouseEvent();
 
+            keyboardEvents(deltaTime);
+
+            afterTick();
+        };
+
+        virtual void keyboardEvents(float deltaTime)
+        {
+            auto movementSpeed = speed * deltaTime;
             const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
             if (keyboardState[buttonForward])
                 setPosition(getPosition() + mask * Forward * movementSpeed);
@@ -78,9 +84,7 @@ namespace KhEngine
                 setPosition(getPosition() + mask * Right * movementSpeed);
             if (keyboardState[buttonLeft])
                 setPosition(getPosition() -(mask * Right * movementSpeed));
-
-            afterTick();
-        };
+        }
 
         virtual void afterTick(){
         }
@@ -92,7 +96,7 @@ namespace KhEngine
                 auto x = glm::dot(offset, followController->Right);
                 auto y = glm::dot(offset, followController->Up);
                 auto z = glm::dot(offset, -followController->Forward);
-                auto mat = glm::lookAt(followController->getPosition() - glm::vec3(x,y,z), followController->getPosition() + followController->Forward,up);
+                auto mat = glm::lookAt(followController->getPosition() - glm::vec3(x,y,z), followController->getPosition() - offset*up/2.0f,up);
                 return mat;
             }
             else

@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <glm.hpp>
+#include <fwd.hpp>
 
 namespace KhEngine{
     class Shader
