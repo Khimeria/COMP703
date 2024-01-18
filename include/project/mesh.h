@@ -30,18 +30,13 @@ namespace KhEngine
         glm::vec3 Specular;
         glm::vec3 Ambient;
         glm::vec3 Emissive;
-        //glm::vec3 Normal; not exist
         float Shininess;
     };
 
     struct Vertex {
-        // Position
         glm::vec3 Position;
-        // normal
         glm::vec3 Normal;
-        // tangent
         glm::vec3 Tangent;
-        // bitangent
         glm::vec3 Bitangent;
         float useTextures;
         glm::vec3  color_diffuse;
@@ -61,7 +56,6 @@ namespace KhEngine
 
     class Mesh {
     public:
-        // mesh data
         std::vector<Vertex> vertices;
         std::vector<GLuint> indices;
         std::vector<Texture> textures;
@@ -70,7 +64,6 @@ namespace KhEngine
         void Draw(Shader &shader);
         void Destroy();
     private:
-        //  render data
         GLuint VAO, VBO, EBO;
 
         void setupMesh();

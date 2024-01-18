@@ -44,6 +44,12 @@ add_executable(project
 		include/project/playerController.h
 		include/project/iInputController.h
 		include/project/iDestroyable.h
+		src/world.cpp
+		src/iInputController.cpp
+		src/game_object.cpp
+		src/model_go.cpp
+		src/primitive_go.cpp
+		src/physic_manager.cpp
 )
 add_subdirectory( src )
 

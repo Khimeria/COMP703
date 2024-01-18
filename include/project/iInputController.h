@@ -7,6 +7,11 @@
 
 #include <iostream>
 #include "iDestroyable.h"
+#include <fwd.hpp>
+#include <geometric.hpp>
+#include <ext/matrix_transform.hpp>
+#include <SDL_scancode.h>
+#include <SDL_keyboard.h>
 
 namespace KhEngine
 {
@@ -29,106 +34,19 @@ namespace KhEngine
 
         IInputController* followController;
 
-        void BindTo(KhEngine::IInputController& inputController)
-        {
-            IsBinded = true;
-            followController = &inputController;
-            this->offset = inputController.Position - Position;
-        };
+        void BindTo(KhEngine::IInputController& inputController);;
+        void Unbind();;
+        void tick(float deltaTime);;
 
-        void Unbind()
-        {
-            IsBinded = false;
-            followController = nullptr;
-            this->offset = glm::vec3(0.0f);
-        };
+        virtual void keyboardEvents(float deltaTime);
+        virtual void afterTick();
+        virtual glm::mat4 getViewMat4();
+        virtual void setPosition(glm::vec3 pos);;
+        virtual glm::vec3 getPosition();;
 
-        void tick(float deltaTime)
-        {
-            if(IsBinded)
-            {
-                return;
-            }
-
-            yaw += (float)*mouseX * glm::radians(mouseSensitivity);
-            pitch -= (float)*mouseY * glm::radians(mouseSensitivity);
-
-            auto r89 = glm::radians(89.0f);
-
-            if (pitch > r89)
-                pitch = r89;
-            if (pitch < -r89)
-                pitch = -r89;
-
-            direction.x = cos(yaw) * cos(pitch);
-            direction.y = sin(pitch);
-            direction.z = sin(yaw) * cos(pitch);
-
-            Forward = glm::normalize(direction);
-            Right = glm::normalize(glm::cross(up, Forward));
-
-            onMouseEvent();
-
-            keyboardEvents(deltaTime);
-
-            afterTick();
-        };
-
-        virtual void keyboardEvents(float deltaTime)
-        {
-            auto movementSpeed = speed * deltaTime;
-            const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
-            if (keyboardState[buttonForward])
-                setPosition(getPosition() + mask * Forward * movementSpeed);
-            if (keyboardState[buttonBackward])
-                setPosition(getPosition() -(mask * Forward * movementSpeed));
-            if (keyboardState[buttonRight])
-                setPosition(getPosition() + mask * Right * movementSpeed);
-            if (keyboardState[buttonLeft])
-                setPosition(getPosition() -(mask * Right * movementSpeed));
-        }
-
-        virtual void afterTick(){
-        }
-
-        virtual glm::mat4 getViewMat4()
-        {
-            if(IsBinded)
-            {
-                auto x = glm::dot(offset, followController->Right);
-                auto y = glm::dot(offset, followController->Up);
-                auto z = glm::dot(offset, -followController->Forward);
-                auto mat = glm::lookAt(followController->getPosition() - glm::vec3(x,y,z), followController->getPosition() - offset*up/2.0f,up);
-                return mat;
-            }
-            else
-                return glm::lookAt(getPosition(), getPosition() + Forward, Up);
-        }
-
-        virtual void setPosition(glm::vec3 pos)
-        {
-            if(IsBinded)
-                return;
-
-            Position = pos;
-        };
-
-        virtual glm::vec3 getPosition(){
-            return Position;
-        };
-        void setSpeed(float speed)
-        {
-            this->speed = speed;
-        };
-        void setMovementMask(glm::vec3 mask)
-        {
-            this->mask = mask;
-        };
-        void bindMouseInput(int &x, int &y)
-        {
-            mouseX = &x;
-            mouseY = &y;
-        };
+        void setSpeed(float speed);;
+        void setMovementMask(glm::vec3 mask);;
+        void bindMouseInput(int &x, int &y);;
     protected:
         glm::vec3 Position = glm::vec3(0.0f);
         int buttonForward = SDL_SCANCODE_W;
@@ -137,9 +55,7 @@ namespace KhEngine
         int buttonLeft = SDL_SCANCODE_A;
         int *mouseX, *mouseY;
 
-        virtual void onMouseEvent(){
-        }
-
+        virtual void onMouseEvent(){};
     private:
     };
 }

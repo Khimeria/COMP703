@@ -29,39 +29,13 @@ namespace KhEngine
         glm::vec3 color = glm::vec3 (1.0f);
         Shader*   shader;
 
-        GameObject(Shader& shader):shader(&shader)
-        {
-        }
-        GameObject(char* vertexShaderPath,char* fragmentShaderPath): shader(RenderManager::GetShader(vertexShaderPath, fragmentShaderPath))
-        {
-            typeHash = typeid(this).hash_code();
-        }
-        void Draw()
-        {
-            Draw(*shader);
-        }
+        GameObject(Shader& shader);
+        GameObject(char* vertexShaderPath,char* fragmentShaderPath);
 
-        glm::mat4 applyOriginModelMatrix(glm::mat4 model) const
-        {
-            model = glm::translate(model, originTransform.Position); // translate it down so it's at the center of the scene
-            model = glm::rotate(model,glm::radians(originTransform.Rotation.x), glm::vec3(1.0f,0.0f,0.0f));
-            model = glm::rotate(model,glm::radians(originTransform.Rotation.y), glm::vec3(0.0f,1.0f,0.0f));
-            model = glm::rotate(model,glm::radians(originTransform.Rotation.z), glm::vec3(0.0f,0.0f,1.0f));
-            model = glm::scale(model, originTransform.Scale);
-            return model;
-        }
+        void Draw();
 
-        glm::mat4 getModelMatrix(glm::mat4 model) const
-        {
-            //glm::mat4 model = glm::mat4(1.0f);
-            //model = applyOriginModelMatrix(model);
-            model = glm::translate(model, transform.Position + originTransform.Position); // translate it down so it's at the center of the scene
-            model = glm::rotate(model,glm::radians(transform.Rotation.x + originTransform.Rotation.x), glm::vec3(1.0f,0.0f,0.0f));
-            model = glm::rotate(model,glm::radians(transform.Rotation.y + originTransform.Rotation.y), glm::vec3(0.0f,1.0f,0.0f));
-            model = glm::rotate(model,glm::radians(transform.Rotation.z + originTransform.Rotation.z), glm::vec3(0.0f,0.0f,1.0f));
-            model = glm::scale(model, transform.Scale * originTransform.Scale);
-            return model;
-        }
+        glm::mat4 applyOriginModelMatrix(glm::mat4 model) const;
+        glm::mat4 getModelMatrix(glm::mat4 model) const;
         virtual void Draw(Shader& shader) {};
     protected:
         glm::mat4 modelMtx = glm::mat4(1.0f);

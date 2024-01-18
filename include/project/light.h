@@ -64,22 +64,17 @@ namespace KhEngine
                                 float outerCutOf);
 
         void addDirectLightSource(DirectLight &light);
-
         void addPointLightSource(PointLight &light);
-
         void addSpotLightSource(SpotLight &light);
-
         void Destroy() override;
 
     private:
         std::vector<PointLight*> pLights;
         std::vector<SpotLight*> sLights;
         DirectLight* directLight ;
-
         glm::vec3 color, position = glm::vec3(0.0f), scale = glm::vec3(0.5f, 0.5f, 0.5f);
 
         void setPointLightToShader(Shader &shader, std::string &name, PointLight* light);
-
         void setBaseLightToShader(Shader &shader, std::string &name, BaseLightSource* light);
     };
 }

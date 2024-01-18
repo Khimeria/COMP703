@@ -23,7 +23,6 @@ namespace KhEngine
 {
     void loadTexture(GLuint *textureID, std::string path, std::string);
     void flip_surface(SDL_Surface* surface);
-
     void setCursorMode(SDL_Window* window, int state);
 }
 

@@ -27,7 +27,6 @@ namespace KhEngine
             void Destroy();
 
         private:
-            // model data
             std::vector<Texture> textures_loaded;
             std::vector<Mesh> meshes;
             std::string directory;
