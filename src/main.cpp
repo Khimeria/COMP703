@@ -274,7 +274,7 @@ int main(int argc, char** argv)
         sLight.Position.z = 5*sin(currentFrame * 1.3f);
         sCube.transform.Position = sLight.Position;
 
-        trallOffset = max(trallOffset,(goblin.transform.Position - trall.transform.Position)/200.0f);
+        trallOffset = max(trallOffset,(goblin.transform.Position - trall.transform.Position)/200.0f*deltaTime);
         trall.transform.Position.x += 10*cos(currentFrame * 1.3f)*trallOffset.x;
         trall.transform.Position.z += 3*sin(currentFrame * 3.3f)*trallOffset.z;
 
@@ -311,8 +311,6 @@ void KhEngine::setCursorMode(SDL_Window* window, int state) {
 
 void KhEngine::loadTexture(GLuint *textureID, std::string directory, std::string path)
 {
-    //Load image at speci1fied path
-
     auto cdw = std::filesystem::current_path().parent_path();
     SDL_Surface* loadedSurface = IMG_Load((cdw/directory/path).c_str());
     if( loadedSurface == NULL )
