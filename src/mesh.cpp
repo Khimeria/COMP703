@@ -49,9 +49,9 @@ namespace KhEngine
         }
 
         if(emissionNr>0)
-            shader.setFloat("materialColor.useEmission", 1.0f);
+            shader.setFloat("material.useEmission", 1.0f);
         else
-            shader.setFloat("materialColor.useEmission", 0.0f);
+            shader.setFloat("material.useEmission", 0.0f);
         // draw mesh
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

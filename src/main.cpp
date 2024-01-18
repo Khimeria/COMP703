@@ -282,7 +282,7 @@ int main(int argc, char** argv)
         if(check.x<=1.0f&&check.y<1.0f&&check.z<1.0f)
         {
             camera.Unbind();
-            std::cout<< "TROLL eats you!"<< std::endl;
+            //std::cout<< "TROLL eats you!"<< std::endl;
             player.Destroy();
         }
 

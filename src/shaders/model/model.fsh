@@ -116,9 +116,14 @@ void main()
                 texture_emission_rgb = materialColor.color_emission;
         }
 
+
         // transform normal vector to range [-1,1]
-        vec3 norm = normalize(texture_normal_rgb * 2.0 - 1.0);
-        norm = normalize(fs_in.TBN * norm);
+        vec3 norm = fs_in.Normal;
+        if(texture_normal_rgb != vec3(0.0)){
+                norm = normalize(texture_normal_rgb * 2.0 - 1.0);
+                norm = normalize(fs_in.TBN * norm);
+        }
+
 
         //vec3 norm = normalize(Normal);
         vec3 viewDir = normalize(viewPos - fs_in.FragPos);
@@ -127,10 +132,10 @@ void main()
         vec3 result = CalcDirectLight(directLight, norm, viewDir);
         // phase 2: Point lights
         for(int i = 0; i < NR_POINT_LIGHTS; i++)
-                result += CalcPointLight(pointLights[i], norm, fs_in.FragPos, viewDir);
+                result += CalcPointLight(pointLights[i], fs_in.Normal, fs_in.FragPos, viewDir);
         // phase 3: Spot light
         for(int i = 0; i < NR_SPOT_LIGHTS; i++)
-                result += CalcSpotLight(spotLights[i], norm, fs_in.FragPos, viewDir);
+                result += CalcSpotLight(spotLights[i], fs_in.Normal, fs_in.FragPos, viewDir);
 
         FragColor = vec4(result, 1.0);
 }
