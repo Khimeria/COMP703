@@ -1,0 +1,86 @@
+[
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/shader.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/shader.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/shader.cpp",
+  "output": "CMakeFiles/project.dir/src/shader.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/camera.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/camera.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/camera.cpp",
+  "output": "CMakeFiles/project.dir/src/camera.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/mesh.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/mesh.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/mesh.cpp",
+  "output": "CMakeFiles/project.dir/src/mesh.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/model.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/model.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/model.cpp",
+  "output": "CMakeFiles/project.dir/src/model.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/light.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/light.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/light.cpp",
+  "output": "CMakeFiles/project.dir/src/light.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/renderManager.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/renderManager.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/renderManager.cpp",
+  "output": "CMakeFiles/project.dir/src/renderManager.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/playerController.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/playerController.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/playerController.cpp",
+  "output": "CMakeFiles/project.dir/src/playerController.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/world.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/world.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/world.cpp",
+  "output": "CMakeFiles/project.dir/src/world.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/iInputController.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/iInputController.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/iInputController.cpp",
+  "output": "CMakeFiles/project.dir/src/iInputController.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/game_object.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/game_object.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/game_object.cpp",
+  "output": "CMakeFiles/project.dir/src/game_object.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/model_go.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/model_go.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/model_go.cpp",
+  "output": "CMakeFiles/project.dir/src/model_go.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/primitive_go.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/primitive_go.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/primitive_go.cpp",
+  "output": "CMakeFiles/project.dir/src/primitive_go.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/physic_manager.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/physic_manager.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/physic_manager.cpp",
+  "output": "CMakeFiles/project.dir/src/physic_manager.cpp.o"
+},
+{
+  "directory": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/cmake-build-release-100-cmake",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/include -I/opt/homebrew/Cellar/sdl2/2.28.5/include/SDL2 -I/opt/homebrew/Cellar/sdl_image/1.2.12_10/include/SDL -I/opt/homebrew/Cellar/glew/2.2.0_1/include/GL -I/opt/homebrew/Cellar/glm/0.9.9.8/include/glm -I/opt/homebrew/Cellar/assimp/5.3.1/include -g -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk -mmacosx-version-min=14.0 -fcolor-diagnostics -o CMakeFiles/project.dir/src/main.cpp.o -c /Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/main.cpp",
+  "file": "/Users/marharytahaichuk/Workspace/C++/MH305742_COMP703/src/main.cpp",
+  "output": "CMakeFiles/project.dir/src/main.cpp.o"
+}
+]

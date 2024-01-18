@@ -1,1 +1,14 @@
-; put any legal notices (eg, credits for 3rd party libraries) in this file.
+AABBTree have fount on https://github.com/JamesRandall/SimpleVoxelEngine/blob/master/voxelEngine/src/AABBTree.h
+Author shared this code in learning purpose;
+Assimp - The official Open-Asset-Importer-Library Repository https://github.com/assimp/assimp;
+Other learning resources was used:
+LearnOpenGL.org;
+http://allenchou.net/2014/02/game-physics-broadphase-dynamic-aabb-tree/ -Game Physics: Broadphase – Dynamic AABB Tree. Posted on February 14, 2014 by Allen Chou.
+
+Touched fields - Trigonometry and algebra: meshes and renderers, camera and player controller, lights, colors materials and textures
+Physics - 1s Newton low, optimization using pointers, management of buffers and shader codding.
+
+Result- a simple navigatable game, where you should survive running from troll, one touch and you wil die)
+also be careful with environment you can stack)
+
+Good luck!
