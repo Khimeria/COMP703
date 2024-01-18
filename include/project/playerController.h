@@ -5,7 +5,6 @@
 #ifndef M_BOSSFIGHT_PLAYERCONTROLLER_H
 #define M_BOSSFIGHT_PLAYERCONTROLLER_H
 
-#include <glm.hpp>
 #include <project/gameObject/model_go.h>
 #include <ext/matrix_transform.hpp>
 #include <SDL.h>
@@ -23,6 +22,7 @@ namespace KhEngine
         glm::mat4 getViewMat4() override;
         void setPosition(glm::vec3 pos) override;
         glm::vec3 getPosition() override;
+        void keyboardEvents(float deltaTime) override;
 
     protected:
         ModelGameObject * mgo;

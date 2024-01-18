@@ -1,14 +1,7 @@
 //
 // Created by Marharyta Haichuk on 09/01/2024.
 //
-
 #include "project/model.h"
-#include "project/main.hpp"
-#include <assimp/Importer.hpp>
-#include <utility>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include <SDL.h>
 
 namespace KhEngine
 {
@@ -74,24 +67,79 @@ namespace KhEngine
             vector.z = mesh->mNormals[i].z;
             vertex.Normal = vector;
 
-            if(mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-            {
-                glm::vec2 vec;
-                vec.x = mesh->mTextureCoords[0][i].x;
-                vec.y = mesh->mTextureCoords[0][i].y;
-                vertex.TexCoords = vec;
-            }
-            else
-                vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-
             if (scene->mNumMaterials > mesh->mMaterialIndex)
             {
                 const auto& mat = scene->mMaterials[mesh->mMaterialIndex];
-                Material material = loadMaterial(mat);
+                auto material = loadMaterial(mat);
 
-                vertex.Color = glm::vec4(material.Diffuse,1.0f);
-                vertex.useDiffuseTexture = mat->GetTextureCount(aiTextureType_DIFFUSE) > 0 ? 1.0f: 0.0f;
+                vertex.shininess = material.Shininess;
+
+                vertex.useTextures = mat->GetTextureCount(aiTextureType_DIFFUSE) > 0 ? 1.0f : 0.0f;
+                if(vertex.useTextures != 1.0f)
+                {
+                    vertex.color_diffuse = material.Diffuse;
+                    vertex.color_specular = material.Specular;
+                    vertex.color_height = material.Ambient;
+                    vertex.color_normal = material.Diffuse;
+                    vertex.color_emission = material.Emissive;
+                }
+                else
+                {
+                    auto uvChannelsNum = mesh->GetNumUVChannels();
+                    aiVector3D coord;
+                    if(uvChannelsNum > 0)
+                    {
+                        if (mesh->HasTextureCoords(aiTextureType_NONE)) {
+                            coord = mesh->mTextureCoords[aiTextureType_NONE][i];
+                            vertex.color_diffuse.x = coord.x;
+                            vertex.color_diffuse.y = coord.y;
+                            vertex.color_height.x = coord.x;
+                            vertex.color_height.y = coord.y;
+                            vertex.color_specular.x = coord.x;
+                            vertex.color_specular.y = coord.y;
+                            vertex.color_emission.x = coord.x;
+                            vertex.color_emission.y = coord.y;
+                            vertex.color_normal.x = coord.x;
+                            vertex.color_normal.y = coord.y;
+                        }
+                        if (mesh->HasTextureCoords(aiTextureType_DIFFUSE)) {
+                            coord = mesh->mTextureCoords[aiTextureType_DIFFUSE][i];
+                            vertex.color_diffuse.x = coord.x;
+                            vertex.color_diffuse.y = coord.y;
+                        }
+                        if (mesh->HasTextureCoords(aiTextureType_AMBIENT)) {
+                            coord = mesh->mTextureCoords[aiTextureType_AMBIENT][i];
+                            vertex.color_height.x = coord.x;
+                            vertex.color_height.y = coord.y;
+                        }
+                        if (mesh->HasTextureCoords(aiTextureType_HEIGHT)) {
+                            coord = mesh->mTextureCoords[aiTextureType_HEIGHT][i];
+                            vertex.color_normal.x = coord.x;
+                            vertex.color_normal.y = coord.y;
+                        }
+                        if (mesh->HasTextureCoords(aiTextureType_EMISSIVE)) {
+                            coord = mesh->mTextureCoords[aiTextureType_EMISSIVE][i];
+                            vertex.color_emission.x = coord.x;
+                            vertex.color_emission.y = coord.y;
+                        }
+                        if (mesh->HasTextureCoords(aiTextureType_SPECULAR)) {
+                            coord = mesh->mTextureCoords[aiTextureType_SPECULAR][i];
+                            vertex.color_specular.x = coord.x;
+                            vertex.color_specular.y = coord.y;
+                        }
+                        if (mesh->HasTextureCoords(aiTextureType_SHININESS)) {
+                            coord = mesh->mTextureCoords[aiTextureType_SHININESS][i];
+                            vertex.color_shininess.x = coord.x;
+                            vertex.color_shininess.y = coord.y;
+                        }
+                    }
+                }
+
+                if(mesh->mBones){
+                    //todo: for animation
+                }
             }
+
 
             //calc tangent space
             // positions
@@ -133,13 +181,6 @@ namespace KhEngine
         }
         // process materials
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER.
-        // Same applies to other texture as the following list summarizes:
-        // diffuse: texture_diffuseN
-        // specular: texture_specularN
-        // normal: texture_normalN
-
         // 1. diffuse maps
         std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
@@ -212,6 +253,9 @@ namespace KhEngine
 
         mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
         material.Specular = glm::vec3(color.r, color.b, color.g);
+
+        mat->Get(AI_MATKEY_COLOR_EMISSIVE, color);
+        material.Emissive = glm::vec3(color.r, color.b, color.g);
 
         mat->Get(AI_MATKEY_SHININESS, shininess);
         material.Shininess = shininess;

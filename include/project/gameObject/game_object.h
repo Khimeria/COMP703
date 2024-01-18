@@ -8,7 +8,7 @@
 #include "project/shader.h"
 #include "project/renderManager.h"
 #include <ext/matrix_transform.hpp>
-#include "project/IDestroyable.h"
+#include <project/iDestroyable.h>
 
 namespace KhEngine
 {
@@ -48,6 +48,7 @@ namespace KhEngine
             model = glm::rotate(model,glm::radians(originTransform.Rotation.y), glm::vec3(0.0f,1.0f,0.0f));
             model = glm::rotate(model,glm::radians(originTransform.Rotation.z), glm::vec3(0.0f,0.0f,1.0f));
             model = glm::scale(model, originTransform.Scale);
+            return model;
         }
 
         glm::mat4 getModelMatrix(glm::mat4 model) const

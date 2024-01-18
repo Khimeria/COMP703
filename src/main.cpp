@@ -4,6 +4,7 @@
 #include <project/gameObject/primitive_go.h>
 #include "project/renderManager.h"
 #include "project/world.h"
+#include "project/physics/physic_manager.h"
 #include "project/playerController.h"
 
 //-----------------------------------
@@ -65,7 +66,8 @@ int main(int argc, char** argv)
 
     glViewport(0, 0, WIDTH, HEIGHT);
     glEnable(GL_DEPTH_TEST);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 20);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glDepthMask(GL_TRUE);
     //glEnable(GL_FRAMEBUFFER_SRGB);
 
     //camera creation
@@ -78,6 +80,7 @@ int main(int argc, char** argv)
 
     //create shader
     KhEngine::Shader* ourShader = KhEngine::RenderManager::GetShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
+    KhEngine::Shader* trallShader = KhEngine::RenderManager::GetShader("src/shaders/model/model.vsh", "src/shaders/model/model.fsh");
     //create models
     //KhEngine::Model ourModel("models/Scene/Scene.obj");
     //KhEngine::Model ourModel("models/14-girl-obj/girl OBJ.obj");
@@ -92,7 +95,10 @@ int main(int argc, char** argv)
     KhEngine::TerrainGameObject terrain(*ourShader);
     world.addGameObject(terrain);
     KhEngine::GoblinGameObject goblin(*ourShader);
+    KhEngine::ModelGameObject trall("resources/models/Trall/GreenTrall.obj",*trallShader);
     world.addGameObject(goblin);
+    world.addGameObject(trall);
+    trall.transform.Scale = glm::vec3(10.0f);
 
     KhEngine::PlayerController player(goblin, -world.Forward);
 
@@ -103,10 +109,46 @@ int main(int argc, char** argv)
     int mouseX, mouseY;
     player.bindMouseInput(mouseX, mouseY);
     camera.bindMouseInput(mouseX, mouseY);
+
+    KhEngine::PhysicEnvironment environment;
+    environment.AddForce(9.80665f, glm::vec3(0.0f,-1.0f,0.0f));
+    environment.AddForce(2.0f, glm::vec3(0.5f,0.0f,0.0f));
+    KhEngine::Force wind{2.0f, glm::vec3(0.5f,0.0f,0.5f)};
+    environment.AddForce(wind);
+    environment.RemoveForce(wind);
+    environment.RemoveForce(1);
+    KhEngine::PhysicObject* physicObject = environment.AddObject(&goblin, 10);
+
+    KhEngine::SpotLight fallLights[6];
+    KhEngine::Cube cubes[6];
+    for(int i =0; i <5; i++)
+    {
+        cubes[i].transform.Position = glm::vec3 ((float)(rand() % 30) + 1.0f,(float)(rand() % 50) + 40.0f,(float)(rand() % 30) + 1.0f);
+
+        fallLights[i].Color = glm::vec3(0.5f, 0.5f, 1.0f);
+        fallLights[i].Position = glm::vec3(0.0f, 1.0f, -1.0f);
+        fallLights[i].Direction = glm::vec3(0.0f, -1.0f, 0.0f);
+        fallLights[i].Ambient = glm::vec3(0.2f);
+        fallLights[i].Diffuse = glm::vec3(0.5f);
+        fallLights[i].Specular = glm::vec3(0.75f);
+        fallLights[i].Constant = 1.0f;
+        fallLights[i].Linear = 0.022f;
+        fallLights[i].Quadratic = 0.0019;
+        fallLights[i].CutOff = cos(glm::radians(12.5f));
+        fallLights[i].OuterCutOff = cos(glm::radians(17.5f));
+
+
+        world.addSpotLight(fallLights[i]);
+        world.addGameObject(cubes[i]);
+
+        environment.AddObject(&cubes[i],(float)(rand() % 15) + 5.0f);
+    }
+
+
     //KhEngine::PlayerController player(goblin, -camera.Forward);
     //player.mask = glm::vec3(1.0f,0.0f,-1.0f);
 
-    camera.setPosition(glm::vec3(0.0f, 20.0f, 60.0f));
+    camera.setPosition(glm::vec3(0.0f, 20.0f, 40.0f));
 
     camera.BindTo(player);
     //camera.Unbind();
@@ -174,13 +216,16 @@ int main(int argc, char** argv)
                             cursorState = 1-cursorState;
                             KhEngine::setCursorMode(window, cursorState);
                             break;
-                        case SDLK_SPACE:
+                        case SDLK_TAB:
                             if(camera.IsBinded)
                             {
                                 camera.Unbind();
                             }
                             else
                                 camera.BindTo(player);
+                            break;
+                        case SDLK_SPACE:
+                            environment.getObject(0).addForce(400,glm::vec3(0.0f,1.0f,0.0f));
                             break;
                     }
                     break;
@@ -199,7 +244,7 @@ int main(int argc, char** argv)
         } // -- while event in queue
 
         // Clear the colorbuffer
-        //glClearColor(0.4f, 0.4f, 0.7f, 1.0f);
+
         glClearColor(0.04f, 0.04f, 0.07f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -211,10 +256,17 @@ int main(int argc, char** argv)
         player.tick(deltaTime);
         camera.tick(deltaTime);
 
-        pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 1.0f, 20*cos(currentFrame));
+        environment.tick(deltaTime);
+
+        for(int i =0; i <4; i++)
+        {
+            fallLights[i].Position = cubes[i].transform.Position;
+        }
+
+        pCube.transform.Position = pLight.Position = glm::vec3(20*sin(currentFrame), 10.0f, 20*cos(currentFrame));
 
         sLight.Position.x = 10*sin(currentFrame * 2.0f);
-        sLight.Position.y = sin(currentFrame * 0.7f);
+        sLight.Position.y = sin(currentFrame * 0.7f) + 5.0f;
         sLight.Position.z = 5*sin(currentFrame * 1.3f);
         sCube.transform.Position = sLight.Position;
 
@@ -237,7 +289,7 @@ int main(int argc, char** argv)
 
 void KhEngine::setCursorMode(SDL_Window* window, int state) {
     SDL_ShowCursor(state);
-    //SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
+    SDL_WarpMouseInWindow(window, WIDTH/2, HEIGHT/2);
     SDL_SetRelativeMouseMode((SDL_bool)(1-state));
 }
 
@@ -283,7 +335,9 @@ void KhEngine::loadTexture(GLuint *textureID, std::string directory, std::string
         glGenerateMipmap(GL_TEXTURE_2D);
 
         //Get rid of old loaded surface
-        //SDL_FreeSurface( loadedSurface ); this version of sdl crash
+#ifdef NOT TARGET_OS_MAC
+        SDL_FreeSurface( loadedSurface );// this version of sdl crash
+#endif
     }
 
 }

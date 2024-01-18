@@ -52,6 +52,21 @@ namespace KhEngine
     void PlayerController::afterTick() {
         auto model = getViewMat4();
         model = glm::scale(model, mgo->originTransform.Scale);
+        model = glm::scale(model, mgo->transform.Scale);
         mgo->setModelView(model);
+    }
+
+    void PlayerController::keyboardEvents(float deltaTime)
+    {
+        auto movementSpeed = speed * deltaTime;
+        const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
+        if (keyboardState[buttonForward])
+            setPosition(getPosition() + mask * Forward * movementSpeed);
+        if (keyboardState[buttonBackward])
+            setPosition(getPosition() -(mask * Forward * movementSpeed));
+        if (keyboardState[buttonRight])
+            setPosition(getPosition() - mask * Right * movementSpeed);
+        if (keyboardState[buttonLeft])
+            setPosition(getPosition() +(mask * Right * movementSpeed));
     }
 }

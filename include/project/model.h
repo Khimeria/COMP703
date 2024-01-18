@@ -9,18 +9,16 @@
 #include <project/mesh.h>
 #include <assimp/scene.h>
 #include <assimp/mesh.h>
-#include <assimp/material.h>
 #include "project/gameObject/game_object.h"
+#include "project/main.hpp"
+#include <assimp/Importer.hpp>
+#include <utility>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <SDL.h>
 
 namespace KhEngine
 {
-    struct Material {
-        glm::vec3 Diffuse;
-        glm::vec3 Specular;
-        glm::vec3 Ambient;
-        float Shininess;
-    };
-
     class Model
     {
         public:
