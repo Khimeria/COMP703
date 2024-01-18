@@ -99,6 +99,7 @@ int main(int argc, char** argv)
     world.addGameObject(goblin);
     world.addGameObject(trall);
     trall.transform.Scale = glm::vec3(10.0f);
+    trall.transform.Position = glm::vec3(-30.0f,0.0f,25.0f);
 
     KhEngine::PlayerController player(goblin, -world.Forward);
 
@@ -109,6 +110,7 @@ int main(int argc, char** argv)
     int mouseX, mouseY;
     player.bindMouseInput(mouseX, mouseY);
     camera.bindMouseInput(mouseX, mouseY);
+
 
     KhEngine::PhysicEnvironment environment;
     environment.AddForce(9.80665f, glm::vec3(0.0f,-1.0f,0.0f));
@@ -198,6 +200,8 @@ int main(int argc, char** argv)
     int cursorState = 0;
     KhEngine::setCursorMode(window, cursorState);
 
+    glm::vec3 trallOffset;
+
     //game loop
     while(EXIT_FAILURE)
     {
@@ -269,6 +273,18 @@ int main(int argc, char** argv)
         sLight.Position.y = sin(currentFrame * 0.7f) + 5.0f;
         sLight.Position.z = 5*sin(currentFrame * 1.3f);
         sCube.transform.Position = sLight.Position;
+
+        trallOffset = max(trallOffset,(goblin.transform.Position - trall.transform.Position)/200.0f);
+        trall.transform.Position.x += 10*cos(currentFrame * 1.3f)*trallOffset.x;
+        trall.transform.Position.z += 3*sin(currentFrame * 3.3f)*trallOffset.z;
+
+        auto check = trall.transform.Position - goblin.transform.Position;
+        if(check.x<=1.0f&&check.y<1.0f&&check.z<1.0f)
+        {
+            camera.Unbind();
+            std::cout<< "TROLL eats you!"<< std::endl;
+            player.Destroy();
+        }
 
         //draw
         world.tick(deltaTime);

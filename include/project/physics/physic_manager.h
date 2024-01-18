@@ -36,21 +36,8 @@ namespace KhEngine
         }
 
         void addForce(float accumulation, glm::vec3 direction){
-
             force.accumulation = accumulation;
             force.direction = direction;
-            std::cout<<"Add force "<<force.accumulation<<std::endl;
-//            auto exist = mass * force.accumulation * force.direction;
-//            auto newOne = mass * accumulation * direction;
-//            auto resultForce = exist + newOne;
-//
-//            auto dotProduct = glm::dot(glm::normalize(exist),glm::normalize(newOne));
-//            this->force.accumulation = (float)std::sqrt(pow(force.accumulation, 2) + pow(accumulation, 2) +
-//                    2 * force.accumulation * accumulation * dotProduct);
-//            auto test = (float)std::sqrt(resultForce.x*resultForce.x+resultForce.y*resultForce.y+resultForce.z*resultForce.z)/mass;
-//            if(force.accumulation == test)
-//                std::cout<<"WOW"<<std::endl;
-//            force.direction = glm::normalize(resultForce);
         }
     };
 
@@ -156,9 +143,6 @@ namespace KhEngine
 
                 auto r = objects[i].velocity * deltaTime * objects[i].force.direction;
                 objects[i].Object->transform.Position = max(objects[i].Object->transform.Position + r, glm::vec3(0.0f));
-                std::cout<<"First force "<<objects[0].force.accumulation<<std::endl;
-                std::cout<<"First r "<<std::to_string(r.y)<<std::endl;
-                std::cout<<"First "<<objects[0].Object->transform.Position.x<<" "<<objects[i].Object->transform.Position.y<<" "<<objects[i].Object->transform.Position.z<<std::endl;
             }
         }
 

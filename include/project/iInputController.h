@@ -6,10 +6,12 @@
 #define M_BOSSFIGHT_IINPUTCONTROLLER_H
 
 #include <iostream>
+#include "iDestroyable.h"
 
 namespace KhEngine
 {
-    class IInputController {
+    class IInputController: public IDestroyable
+            {
     public:
         glm::vec3 Right = glm::vec3(1.0f, 0.0f, 0.0f),
                   Up = glm::vec3(0.0f, 1.0f, 0.0f),

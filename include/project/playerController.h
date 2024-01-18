@@ -23,7 +23,7 @@ namespace KhEngine
         void setPosition(glm::vec3 pos) override;
         glm::vec3 getPosition() override;
         void keyboardEvents(float deltaTime) override;
-
+        void Destroy() override;
     protected:
         ModelGameObject * mgo;
     private:

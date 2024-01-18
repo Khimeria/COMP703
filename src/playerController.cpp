@@ -25,7 +25,7 @@ namespace KhEngine
         auto alpha = atan2(-det, -dot) + pi;
 
         auto model = glm::mat4 (1.0f);
-        model = glm::translate(model, glm::vec3(mgo->transform.Position));
+        model = glm::translate(model, glm::vec3(getPosition()));
         model = glm::rotate(model, alpha, glm::vec3(0.0f, 1.0f, 0.0f)); // then rotate
         return model;
     }
@@ -40,17 +40,24 @@ namespace KhEngine
 
     void PlayerController::setPosition(glm::vec3 pos)
     {
+        if(mgo== nullptr)
+            return;
+
         IInputController::setPosition(pos);
         mgo->transform.Position = pos;
     }
 
     glm::vec3 PlayerController::getPosition()
     {
+        if(mgo== nullptr)
+            return glm::vec3 (0.0f);
         return mgo->transform.Position;
     }
 
     void PlayerController::afterTick() {
         auto model = getViewMat4();
+        if(mgo== nullptr)
+            return;
         model = glm::scale(model, mgo->originTransform.Scale);
         model = glm::scale(model, mgo->transform.Scale);
         mgo->setModelView(model);
@@ -68,5 +75,9 @@ namespace KhEngine
             setPosition(getPosition() - mask * Right * movementSpeed);
         if (keyboardState[buttonLeft])
             setPosition(getPosition() +(mask * Right * movementSpeed));
+    }
+
+    void PlayerController::Destroy() {
+        this->mgo = nullptr;
     }
 }
