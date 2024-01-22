@@ -21,11 +21,13 @@ namespace KhEngine
     public:
         GameObject* Object;
         float mass;
+        float bounceLossCoefficient;
         float velocity;
         float startVelocity;
         float startTime{};
         Force force{};
 
+        PhysicObject(GameObject* go, float mass, float bounceCoefficient);
         PhysicObject(GameObject* go, float mass);
         void addForce(float accumulation, glm::vec3 direction);
     };
@@ -44,6 +46,7 @@ namespace KhEngine
         void remove(std::vector<T>& vec, std::size_t pos);
 
         PhysicObject* AddObject(GameObject* go, float mass);
+        PhysicObject* AddObject(GameObject* go, float mass, float bounceCoefficient);
 
         void RemoveObject(GameObject* go, float mass);
         void calcResultantForce(PhysicObject& obj);

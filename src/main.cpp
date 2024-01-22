@@ -119,7 +119,7 @@ int main(int argc, char** argv)
     environment.AddForce(wind);
     environment.RemoveForce(wind);
     environment.RemoveForce(1);
-    KhEngine::PhysicObject* physicObject = environment.AddObject(&goblin, 10);
+    KhEngine::PhysicObject* physicObject = environment.AddObject(&goblin, 10, 0.8f);
 
     KhEngine::SpotLight fallLights[6];
     KhEngine::Cube cubes[6];
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
         world.addSpotLight(fallLights[i]);
         world.addGameObject(cubes[i]);
 
-        environment.AddObject(&cubes[i],(float)(rand() % 15) + 5.0f);
+        environment.AddObject(&cubes[i],(float)(rand() % 15) + 5.0f, 0.35f);
     }
 
 
@@ -229,7 +229,7 @@ int main(int argc, char** argv)
                                 camera.BindTo(player);
                             break;
                         case SDLK_SPACE:
-                            environment.getObject(0).addForce(400,glm::vec3(0.0f,1.0f,0.0f));
+                            environment.getObject(0).addForce(1000,glm::vec3(0.0f,1.0f,0.0f));
                             break;
                     }
                     break;

@@ -37,6 +37,12 @@ namespace KhEngine{
         return item;
     }
 
+    KhEngine::PhysicObject *KhEngine::PhysicEnvironment::AddObject(KhEngine::GameObject *go, float mass, float bounceCoefficient) {
+        objects.emplace_back(go,mass, bounceCoefficient);
+        auto item = &objects[objects.size()-1];
+        return item;
+    }
+
     void KhEngine::PhysicEnvironment::RemoveObject(KhEngine::GameObject *go, float mass) {
         for(int i = 0; i< objects.size(); i++)
         {
@@ -73,10 +79,10 @@ namespace KhEngine{
         {
             float velocityTime = time;
 
-            if(objects[i].Object->transform.Position.y <= -1.0f)
+            if(objects[i].Object->transform.Position.y <= 0.0f)
             {
                 //hit plane
-                float accumulation = 0.65f * objects[i].force.accumulation;
+                float accumulation = (1.0f-objects[i].bounceLossCoefficient) * objects[i].force.accumulation;
 
                 glm::vec3 planeNormal = glm::vec3(0.0f,1.0f,0.0f);
                 auto cos = glm::dot(objects[i].force.direction,planeNormal);
@@ -113,11 +119,15 @@ namespace KhEngine{
         force.direction = glm::vec3(0.0f);
         startVelocity = 0.0f;
         velocity = 0.0f;
+        bounceLossCoefficient = 0.0f;
     }
 
     void PhysicObject::addForce(float accumulation, glm::vec3 direction) {
         force.accumulation = accumulation;
         force.direction = direction;
+    }
+
+    PhysicObject::PhysicObject(GameObject *go, float mass, float bounceCoefficient): Object(go), mass(mass), bounceLossCoefficient(bounceCoefficient) {
     }
 }
 
